@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShieldAlert, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { ShieldAlert, Eye, EyeOff, AlertCircle, ArrowLeft } from 'lucide-react';
 import GlassCard from '../../components/ui/GlassCard';
 import GlassInput from '../../components/ui/GlassInput';
 import GlassButton from '../../components/ui/GlassButton';
+import backgroundImage from '../../assets/background.png';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -45,154 +46,148 @@ const Register = () => {
   };
 
   return (
-    <div 
-      className="min-h-screen text-slate-200 bg-[#0f172a] flex items-center justify-center p-4 relative overflow-hidden font-sans"
-      style={{
-        backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 40%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 40%), radial-gradient(circle at 50% 80%, rgba(79, 70, 229, 0.1), transparent 50%)',
-        backgroundAttachment: 'fixed'
-      }}
-    >
-      <div className="max-w-5xl w-full grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-        
-        {/* LEFT: Branding / Visual */}
-        <div className="hidden lg:flex flex-col justify-center space-y-8">
-          <div className="bg-blue-600 p-4 rounded-2xl w-fit border border-blue-500 shadow-md">
-            <ShieldAlert className="w-12 h-12 text-white" />
+    <div className="min-h-screen text-slate-100 flex flex-col justify-center items-center p-4 relative overflow-hidden font-sans bg-slate-950 py-12">
+      {/* Background Image Layer */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-700 scale-105"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      />
+      {/* Dark & Civic Green Gradient Overlay */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-slate-950/90 via-emerald-950/80 to-slate-950/95 backdrop-blur-[2px]" />
+
+      <div className="w-full max-w-md mx-auto relative z-10 my-auto">
+        {/* Top Back link */}
+        <Link 
+          to="/" 
+          className="inline-flex items-center text-sm font-semibold text-emerald-300 hover:text-emerald-200 mb-6 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1.5" />
+          Back to Home
+        </Link>
+
+        {/* Branding Header */}
+        <div className="text-center mb-8">
+          <div className="bg-gradient-to-br from-emerald-500 to-teal-700 p-3.5 rounded-2xl w-fit mx-auto mb-4 border border-emerald-400/30 shadow-xl shadow-emerald-950/50">
+            <ShieldAlert className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-5xl font-extrabold text-slate-800 tracking-tight leading-tight">
-            Join <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">SmartCivic</span>
-          </h1>
-          <p className="text-slate-600 text-lg leading-relaxed max-w-md">
-            Create an account to report issues in your neighborhood, track their resolution progress, and help improve your city.
-          </p>
-          <div className="space-y-4 pt-4">
-            <div className="flex items-center text-slate-700 font-medium bg-white p-3 rounded-xl border border-slate-200 w-fit shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-blue-500 mr-3"></span>
-              Fast Issue Resolution
-            </div>
-            <div className="flex items-center text-slate-700 font-medium bg-white p-3 rounded-xl border border-slate-200 w-fit shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-cyan-500 mr-3"></span>
-              Direct Department Routing
-            </div>
-          </div>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Smart Civic Portal</h1>
+          <p className="text-slate-300 text-sm mt-1">Create an account to report and track civic issues</p>
         </div>
 
-        {/* RIGHT: Register Card */}
-        <div className="w-full max-w-md mx-auto lg:max-w-none">
-          <div className="lg:hidden flex flex-col items-center mb-8">
-            <div className="bg-blue-600 p-3 rounded-xl border border-blue-500 mb-4 shadow-sm">
-              <ShieldAlert className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-slate-800 text-center tracking-tight">SmartCivic Portal</h1>
+        {/* Register Glass Card */}
+        <GlassCard className="p-8 backdrop-blur-xl bg-slate-900/80 border-emerald-500/30 shadow-2xl">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-white tracking-tight">
+              Create Account
+            </h2>
+            <p className="mt-1 text-sm text-slate-300">
+              Sign up as a citizen to get started
+            </p>
           </div>
 
-          <GlassCard className="p-8">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
-                Create Account
-              </h2>
-              <p className="mt-2 text-slate-500">
-                Sign up as a citizen to get started
-              </p>
+          {error && (
+            <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 mb-6 flex items-start animate-in slide-in-from-top-2">
+              <AlertCircle className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
+              <p className="ml-3 text-sm text-rose-200 font-medium">{error}</p>
             </div>
+          )}
 
-            {error && (
-              <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-6 flex items-start">
-                <AlertCircle className="w-5 h-5 text-rose-500 mt-0.5 shrink-0" />
-                <p className="ml-3 text-sm text-rose-700 font-medium">{error}</p>
-              </div>
-            )}
-
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">First Name</label>
-                  <GlassInput
-                    name="firstName"
-                    type="text"
-                    required
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    placeholder="John"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Last Name</label>
-                  <GlassInput
-                    name="lastName"
-                    type="text"
-                    required
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    placeholder="Doe"
-                  />
-                </div>
-              </div>
-
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Email address</label>
+                <label className="block text-sm font-medium text-slate-200 mb-1">First Name</label>
                 <GlassInput
-                  name="email"
-                  type="email"
+                  name="firstName"
+                  type="text"
                   required
-                  value={formData.email}
+                  value={formData.firstName}
                   onChange={handleChange}
-                  placeholder="you@example.com"
+                  placeholder="John"
+                  className="bg-slate-950/60 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500"
                 />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
-                <div className="relative">
-                  <GlassInput
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
+                <label className="block text-sm font-medium text-slate-200 mb-1">Last Name</label>
+                <GlassInput
+                  name="lastName"
+                  type="text"
+                  required
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Doe"
+                  className="bg-slate-950/60 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500"
+                />
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Confirm Password</label>
-                <div className="relative">
-                  <GlassInput
-                    name="confirmPassword"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <GlassButton type="submit" loading={loading} className="w-full">
-                  {loading ? 'Creating account...' : 'Create Account'}
-                </GlassButton>
-              </div>
-            </form>
-
-            <div className="mt-8 pt-6 border-t border-slate-200 text-center">
-              <p className="text-slate-500 text-sm">
-                Already have an account?{' '}
-                <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-                  Sign in
-                </Link>
-              </p>
             </div>
-          </GlassCard>
-        </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-200 mb-1">Email address</label>
+              <GlassInput
+                name="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                className="bg-slate-950/60 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-200 mb-1">Password</label>
+              <div className="relative">
+                <GlassInput
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  className="bg-slate-950/60 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-200 focus:outline-none"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-200 mb-1">Confirm Password</label>
+              <GlassInput
+                name="confirmPassword"
+                type={showPassword ? "text" : "password"}
+                required
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="bg-slate-950/60 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500"
+              />
+            </div>
+
+            <div className="pt-2">
+              <GlassButton 
+                type="submit" 
+                loading={loading} 
+                className="w-full font-bold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 border-emerald-400/30 shadow-lg shadow-emerald-950/50 py-3"
+              >
+                {loading ? 'Creating account...' : 'Create Account'}
+              </GlassButton>
+            </div>
+          </form>
+
+          <div className="mt-8 pt-6 border-t border-white/10 text-center">
+            <p className="text-slate-400 text-sm">
+              Already have an account?{' '}
+              <Link to="/login" className="font-semibold text-emerald-400 hover:text-emerald-300 transition-colors">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </GlassCard>
       </div>
     </div>
   );
