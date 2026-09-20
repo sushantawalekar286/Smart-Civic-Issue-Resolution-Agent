@@ -23,6 +23,20 @@ router.post('/analyze', protect, authorize('citizen'), upload.single('image'), v
 router.post('/', protect, authorize('citizen'), complaintController.submitComplaint);
 
 /**
+ * @route GET /api/v1/complaints
+ * @desc Get all complaints for the authenticated citizen
+ * @access Private (Citizen)
+ */
+router.get('/', protect, authorize('citizen'), complaintController.getComplaints);
+
+/**
+ * @route GET /api/v1/complaints/:complaintId
+ * @desc Get details of a single complaint
+ * @access Private (Citizen, Authority, Admin)
+ */
+router.get('/:complaintId', protect, complaintController.getComplaintById);
+
+/**
  * @route GET /api/v1/complaints/:complaintId/agent-actions
  * @desc Get all agent actions for a complaint (Admin & Authority)
  * @access Private (Authority, Admin)

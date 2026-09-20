@@ -68,6 +68,10 @@ const complaintSchema = new mongoose.Schema({
         type: String,
         required: true
       },
+      publicId: {
+        type: String,
+        default: ""
+      },
       fileName: {
         type: String,
         default: ""

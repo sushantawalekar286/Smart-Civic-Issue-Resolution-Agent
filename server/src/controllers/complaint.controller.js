@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const storageService = require('../services/storage.service');
+const complaintService = require('../services/complaint.service');
 const Complaint = require('../models/Complaint');
 const AgentAction = require('../models/AgentAction');
 
@@ -19,12 +20,13 @@ exports.analyzeIntake = async (req, res, next) => {
         throw new Error('Unsupported image format.');
       }
 
-      // Mock upload using the storage service
+      // Real upload using the Cloudinary storage service
       const uploadResult = await storageService.uploadImage(req.file.path);
       
       evidence.push({
         type: 'image',
         url: uploadResult.url,
+        publicId: uploadResult.publicId || '',
         fileName: req.file.originalname,
         mimeType: req.file.mimetype,
         filePath: req.file.path
@@ -124,6 +126,45 @@ exports.submitComplaint = async (req, res, next) => {
       error: error.message,
       message: error.message
     });
+  }
+};
+
+/**
+ * GET /api/v1/complaints
+ * Returns complaints for the authenticated citizen
+ */
+exports.getComplaints = async (req, res, next) => {
+  try {
+    const { status, severity } = req.query;
+    const complaints = await complaintService.getCitizenComplaints(req.user._id.toString(), { status, severity });
+
+    res.status(200).json({
+      success: true,
+      count: complaints.length,
+      data: complaints
+    });
+  } catch (error) {
+    if (error.statusCode) res.status(error.statusCode);
+    next(error);
+  }
+};
+
+/**
+ * GET /api/v1/complaints/:complaintId
+ * Returns single complaint details with authorization checks
+ */
+exports.getComplaintById = async (req, res, next) => {
+  try {
+    const { complaintId } = req.params;
+    const complaint = await complaintService.getComplaintById(complaintId, req.user);
+
+    res.status(200).json({
+      success: true,
+      data: complaint
+    });
+  } catch (error) {
+    if (error.statusCode) res.status(error.statusCode);
+    next(error);
   }
 };
 

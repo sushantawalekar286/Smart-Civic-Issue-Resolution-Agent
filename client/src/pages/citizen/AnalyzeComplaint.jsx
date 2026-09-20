@@ -104,13 +104,22 @@ const AnalyzeComplaint = () => {
             </div>
           </div>
 
-          <GlassButton
-            onClick={() => navigate('/citizen/dashboard')}
-            variant="primary"
-            className="w-full sm:w-auto px-8 transition-transform hover:scale-105 active:scale-95 animate-in slide-in-from-bottom-4 duration-500 delay-500 fill-mode-both"
-          >
-            View Dashboard
-          </GlassButton>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in slide-in-from-bottom-4 duration-500 delay-500 fill-mode-both">
+            <GlassButton
+              onClick={() => navigate(`/citizen/complaints/${success.complaintId}`)}
+              variant="primary"
+              className="w-full sm:w-auto px-8 transition-transform hover:scale-105 active:scale-95"
+            >
+              View Complaint Details
+            </GlassButton>
+            <GlassButton
+              onClick={() => navigate('/citizen/complaints')}
+              variant="secondary"
+              className="w-full sm:w-auto px-8 transition-transform hover:scale-105 active:scale-95"
+            >
+              My Complaints
+            </GlassButton>
+          </div>
         </GlassCard>
       </div>
     );
