@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import DescriptionInput from './DescriptionInput';
+import VoiceInput from '../voice/VoiceInput';
 import EvidenceUploader from './EvidenceUploader';
-import LocationPicker from './LocationPicker';
+import OpenStreetMapLocationPicker from '../location/OpenStreetMapLocationPicker';
 import InputSummary from './InputSummary';
 import { complaintAPI } from '../../services/complaint.service';
 import GlassButton from '../ui/GlassButton';
@@ -9,6 +10,7 @@ import { AlertCircle, ArrowRight } from 'lucide-react';
 
 const ComplaintForm = ({ onAnalyzed }) => {
   const [description, setDescription] = useState('');
+  const [isListening, setIsListening] = useState(false);
   const [file, setFile] = useState(null);
   const [location, setLocation] = useState(null);
   
@@ -88,11 +90,16 @@ const ComplaintForm = ({ onAnalyzed }) => {
         <p className="mt-1 text-sm text-slate-600">
           Please provide a detailed description of the problem.
         </p>
-        <div className="mt-4">
+        <div className="mt-4 space-y-4">
           <DescriptionInput 
             value={description} 
             onChange={setDescription} 
             error={errors.description} 
+          />
+          <VoiceInput 
+            onTranscriptComplete={(text) => setDescription((prev) => (prev ? `${prev} ${text}` : text))}
+            isListening={isListening}
+            setIsListening={setIsListening}
           />
         </div>
       </div>
@@ -117,7 +124,7 @@ const ComplaintForm = ({ onAnalyzed }) => {
           Pinpoint the exact location of the issue.
         </p>
         <div className="mt-4">
-          <LocationPicker 
+          <OpenStreetMapLocationPicker 
             location={location} 
             onLocationSelect={setLocation} 
             error={errors.location} 
