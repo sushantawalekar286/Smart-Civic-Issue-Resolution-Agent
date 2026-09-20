@@ -45,12 +45,6 @@ const AppRoutes = () => {
         </ProtectedRoute>
       } />
       
-      <Route path="/citizen/report" element={
-        <ProtectedRoute allowedRoles={['citizen']}>
-          <div><h2>Report Issue Placeholder</h2></div>
-        </ProtectedRoute>
-      } />
-
       <Route path="/citizen/analyze/:id" element={
         <ProtectedRoute allowedRoles={['citizen']}>
           <AnalyzeComplaint />

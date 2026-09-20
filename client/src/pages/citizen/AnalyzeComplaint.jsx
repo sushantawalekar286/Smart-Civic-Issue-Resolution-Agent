@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { complaintAnalysisService } from '../../../services/complaintAnalysis.service';
+import { complaintAnalysisService } from '../../services/complaintAnalysis.service';
 
-import AIAnalysisCard from '../../../components/complaints/AIAnalysisCard';
-import EvidenceAnalysisCard from '../../../components/complaints/EvidenceAnalysisCard';
-import SeverityCard from '../../../components/complaints/SeverityCard';
-import DepartmentCard from '../../../components/complaints/DepartmentCard';
-import GeneratedComplaintCard from '../../../components/complaints/GeneratedComplaintCard';
-import ComplaintReviewActions from '../../../components/complaints/ComplaintReviewActions';
+import AIAnalysisCard from '../../components/complaints/AIAnalysisCard';
+import EvidenceAnalysisCard from '../../components/complaints/EvidenceAnalysisCard';
+import SeverityCard from '../../components/complaints/SeverityCard';
+import DepartmentCard from '../../components/complaints/DepartmentCard';
+import GeneratedComplaintCard from '../../components/complaints/GeneratedComplaintCard';
+import ComplaintReviewActions from '../../components/complaints/ComplaintReviewActions';
 
 const AnalyzeComplaint = () => {
   const location = useLocation();
@@ -16,7 +16,7 @@ const AnalyzeComplaint = () => {
   // Expecting analysis payload + token passed via route state from ReportIssue
   const { analysisData, analysisToken } = location.state || {};
   
-  const [isSubmitting, setIsSubmitting] = false;
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(null);
 
