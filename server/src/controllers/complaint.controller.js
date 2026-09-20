@@ -1,4 +1,7 @@
+const mongoose = require('mongoose');
 const storageService = require('../services/storage.service');
+const Complaint = require('../models/Complaint');
+const AgentAction = require('../models/AgentAction');
 
 exports.analyzeIntake = async (req, res, next) => {
   try {
@@ -105,5 +108,51 @@ exports.submitComplaint = async (req, res, next) => {
       error: error.message,
       message: error.message
     });
+  }
+};
+
+/**
+ * GET /api/v1/complaints/:complaintId/agent-actions
+ * Returns all AgentAction records for a given complaint (Admin & assigned Authority)
+ */
+exports.getComplaintAgentActions = async (req, res, next) => {
+  try {
+    const { complaintId } = req.params;
+
+    let complaint = await Complaint.findOne({ complaintId });
+    if (!complaint && mongoose.Types.ObjectId.isValid(complaintId)) {
+      complaint = await Complaint.findById(complaintId);
+    }
+
+    if (!complaint) {
+      return res.status(404).json({
+        success: false,
+        error: 'Complaint not found'
+      });
+    }
+
+    // Role-based access control:
+    // Admin has access to all complaints
+    // Authority has access only if complaint belongs to their department
+    if (req.user.role === 'authority') {
+      if (!req.user.departmentId || !complaint.departmentId || !complaint.departmentId.equals(req.user.departmentId)) {
+        return res.status(403).json({
+          success: false,
+          error: 'Not authorized to access agent actions for another department'
+        });
+      }
+    }
+
+    const actions = await AgentAction.find({ complaintId: complaint._id })
+      .sort({ timestamp: -1 });
+
+    res.status(200).json({
+      success: true,
+      complaintId: complaint.complaintId,
+      count: actions.length,
+      data: actions
+    });
+  } catch (error) {
+    next(error);
   }
 };
