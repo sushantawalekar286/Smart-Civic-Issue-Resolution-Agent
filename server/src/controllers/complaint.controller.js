@@ -43,12 +43,19 @@ exports.analyzeIntake = async (req, res, next) => {
     const agentOrchestrator = require('../services/ai/agentOrchestrator.service');
     const aiAnalysis = await agentOrchestrator.analyzeComplaint(payload);
 
+    let analysisToken = null;
+    if (req.user && req.user._id) {
+      const analysisTokenService = require('../services/analysisToken.service');
+      analysisToken = analysisTokenService.generateToken(req.user._id.toString(), payload, aiAnalysis);
+    }
+
     // Note: Do NOT save to database yet. Step 5 will handle citizen review & final submission.
     res.status(200).json({
       success: true,
       data: {
         ...payload,
-        aiAnalysis
+        aiAnalysis,
+        analysisToken
       }
     });
   } catch (error) {
@@ -65,6 +72,7 @@ exports.submitComplaint = async (req, res, next) => {
     if (!analysisToken) {
       return res.status(400).json({
         success: false,
+        error: 'Analysis token is required',
         message: 'Analysis token is required'
       });
     }
@@ -73,18 +81,29 @@ exports.submitComplaint = async (req, res, next) => {
 
     res.status(201).json(result);
   } catch (error) {
-    // If it's a known token error, send 400
-    if (error.message.includes('Analysis token expired') ||
-        error.message.includes('Invalid analysis token signature') ||
-        error.message.includes('Token does not belong') ||
-        error.message.includes('Malformed token') ||
-        error.message.includes('Invalid token type')) {
-      return res.status(400).json({
-        success: false,
-        message: error.message
-      });
+    let statusCode = error.statusCode || 500;
+
+    if (error.message.includes('Token does not belong')) {
+      statusCode = 403;
+    } else if (error.message.includes('Department not found')) {
+      statusCode = 404;
+    } else if (error.message.includes('already been submitted')) {
+      statusCode = 409;
+    } else if (
+      error.message.includes('Analysis token expired') ||
+      error.message.includes('Invalid analysis token signature') ||
+      error.message.includes('Malformed token') ||
+      error.message.includes('Invalid token type') ||
+      error.message.includes('Missing department') ||
+      error.message.includes('Invalid complaint')
+    ) {
+      statusCode = 400;
     }
-    
-    next(error);
+
+    res.status(statusCode).json({
+      success: false,
+      error: error.message,
+      message: error.message
+    });
   }
 };

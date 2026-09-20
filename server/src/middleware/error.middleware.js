@@ -1,6 +1,4 @@
 const errorHandler = (err, req, res, next) => {
-  console.error(err.stack);
-
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message;
 
@@ -21,6 +19,10 @@ const errorHandler = (err, req, res, next) => {
     const messages = Object.values(err.errors).map(val => val.message);
     message = messages.join(', ');
     statusCode = 400;
+  }
+
+  if (statusCode >= 500) {
+    console.error(err.stack);
   }
 
   res.status(statusCode).json({

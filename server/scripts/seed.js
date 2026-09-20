@@ -69,9 +69,23 @@ const seedData = async () => {
             role: 'authority',
             departmentId: deptMap[authSeed.code]
           });
-          console.log(`Created Authority User for ${authSeed.code}`);
         }
       }
+    }
+
+    // 4. Seed Citizen
+    const citizenEmail = process.env.SEED_CITIZEN_EMAIL || 'citizen@civic.local';
+    const citizenPassword = process.env.SEED_CITIZEN_PASSWORD || 'citizenpassword';
+    const citizenExists = await User.findOne({ email: citizenEmail });
+    if (!citizenExists) {
+      const passwordHash = await bcrypt.hash(citizenPassword, 10);
+      await User.create({
+        name: 'Default Citizen',
+        email: citizenEmail,
+        passwordHash,
+        role: 'citizen'
+      });
+      console.log('Created Citizen User');
     }
 
     console.log('Seeding completed successfully');
