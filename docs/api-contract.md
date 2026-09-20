@@ -177,12 +177,60 @@ Validates and prepares the citizen complaint input for the AI analysis pipeline.
 - `422 Unprocessable Entity`: AI output validation failure.
 
 ---
-*Note: Step 4 AI Analysis is integrated into `/complaints/analyze`. Citizen Review and final Complaint creation occur in Step 5.*
 
-## Step 5: Complaint Submission
-`POST /api/v1/complaints`
-Accepts `analysisToken` from Step 4.
-*(Step 5 — pending Step 4 integration)*
+## Final Complaint Submission API (Step 5B)
+
+### Submit Complaint
+**POST /complaints**
+
+Creates the final persistent Complaint document and initial `COMPLAINT_SUBMITTED` AgentAction audit record based on a cryptographically verified `analysisToken` after citizen review and confirmation.
+
+> [!SECURITY]
+> The frontend is not trusted for AI-derived attributes (issueType, severity, department, confidence, reasoning, generated text). All metadata is recovered directly from the verified server-signed `analysisToken`.
+
+**Headers**
+- `Cookie: jwt=<token>` or `Authorization: Bearer <token>`
+- `Content-Type: application/json`
+
+**Role Required:** `citizen`
+
+**Request Body**
+```json
+{
+  "analysisToken": "<signed-analysis-jwt-token>"
+}
+```
+
+**Response (201 Created)**
+```json
+{
+  "success": true,
+  "message": "Complaint submitted successfully",
+  "data": {
+    "complaint": {
+      "complaintId": "CIV-20260920-0001",
+      "issueType": "Pothole",
+      "severity": "HIGH",
+      "department": "Roads Dept",
+      "status": "SUBMITTED",
+      "submittedAt": "2026-09-20T14:00:00.000Z"
+    }
+  }
+}
+```
+
+**Errors**
+- `400 Bad Request`:
+  - Missing analysisToken.
+  - Expired or malformed analysisToken.
+  - Invalid analysisToken signature.
+  - Wrong token type.
+  - Missing or invalid coordinates/description in recovered token payload.
+- `401 Unauthorized`: Unauthenticated citizen.
+- `403 Forbidden`: Token belongs to a different citizen or authenticated user is not a citizen.
+- `404 Not Found`: Department code in token cannot be resolved to a registered department.
+- `409 Conflict`: Duplicate submission attempt with an analysis token that was already used to create a complaint.
+- `500 Internal Server Error`: Unexpected database failure.
 
 ---
 
