@@ -39,10 +39,17 @@ exports.analyzeIntake = async (req, res, next) => {
       evidence
     };
 
-    // Note: Do not save to database. Only prepare the payload for Step 4.
+    // Execute AI Complaint Analysis Pipeline (Step 4)
+    const agentOrchestrator = require('../services/ai/agentOrchestrator.service');
+    const aiAnalysis = await agentOrchestrator.analyzeComplaint(payload);
+
+    // Note: Do NOT save to database yet. Step 5 will handle citizen review & final submission.
     res.status(200).json({
       success: true,
-      data: payload
+      data: {
+        ...payload,
+        aiAnalysis
+      }
     });
   } catch (error) {
     next(error);

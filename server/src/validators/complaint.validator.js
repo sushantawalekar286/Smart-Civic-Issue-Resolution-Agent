@@ -7,6 +7,7 @@ exports.validateComplaintIntake = [
     .isLength({ min: 10, max: 1000 }).withMessage('Description must be between 10 and 1000 characters.'),
   
   body('inputMethod')
+    .optional()
     .isIn(['text', 'image', 'mixed']).withMessage('Invalid input method'),
 
   body('location.latitude')
