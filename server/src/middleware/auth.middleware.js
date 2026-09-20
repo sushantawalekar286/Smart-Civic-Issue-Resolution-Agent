@@ -5,20 +5,20 @@ const protect = async (req, res, next) => {
   try {
     let token;
 
-    if (req.cookies.jwt) {
+    if (req.cookies && req.cookies.jwt) {
       token = req.cookies.jwt;
     } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
     }
 
-    if (!token) {
+    if (!token || token === 'none' || token === '') {
       return res.status(401).json({ error: 'Not authorized to access this route' });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id);
 
-    if (!req.user) {
+    if (!req.user || !req.user.isActive) {
       return res.status(401).json({ error: 'Not authorized to access this route' });
     }
 

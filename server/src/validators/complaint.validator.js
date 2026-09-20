@@ -1,6 +1,16 @@
 const { body, validationResult } = require('express-validator');
 
 exports.validateComplaintIntake = [
+  (req, res, next) => {
+    if (typeof req.body.location === 'string') {
+      try {
+        req.body.location = JSON.parse(req.body.location);
+      } catch (e) {
+        // Will be caught by location validation
+      }
+    }
+    next();
+  },
   body('description')
     .trim()
     .notEmpty().withMessage('Please describe the civic issue.')
