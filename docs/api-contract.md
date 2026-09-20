@@ -139,15 +139,40 @@ Validates and prepares the citizen complaint input for the AI analysis pipeline.
         "fileName": "pothole.jpg",
         "mimeType": "image/jpeg"
       }
-    ]
+    ],
+    "aiAnalysis": {
+      "issueType": "Pothole",
+      "classificationConfidence": 0.92,
+      "evidenceAnalysis": {
+        "summary": "Analysis based on citizen description and attached photographic evidence (pothole.jpg).",
+        "findings": [
+          "Citizen reported: \"There is a large pothole near the college entrance.\"",
+          "Photographic evidence provided (pothole.jpg) confirms visual documentation submitted by citizen."
+        ]
+      },
+      "locationAnalysis": {
+        "summary": "GPS coordinates provided (16.7000, 74.2000). No street address was provided with the complaint."
+      },
+      "severity": {
+        "level": "HIGH",
+        "reason": "Complaint indicates significant physical impact, active leakage, or elevated risk of accident."
+      },
+      "department": {
+        "code": "ROAD",
+        "name": "Road / Public Works Department",
+        "reason": "Issue type \"Pothole\" is mapped to the Road / Public Works Department (ROAD) based on municipal jurisdiction responsibilities."
+      },
+      "generatedComplaint": "Issue:\nPothole\n\nLocation:\nGPS (16.7000, 74.2000)\n\nSeverity:\nHigh\n\nDescription:\nThere is a large pothole near the college entrance."
+    }
   }
 }
 ```
 
-**Response Errors (400 Bad Request)**
+**Response Errors (400 Bad Request / 422 Unprocessable)**
 - `400 Bad Request`: Validation failure (e.g. "Please describe the civic issue." or "Unsupported image format.").
 - `401 Unauthorized`: Unauthenticated.
 - `403 Forbidden`: Authenticated as non-citizen.
+- `422 Unprocessable Entity`: AI output validation failure.
 
 ---
-*Note: AI analysis step and Admin/Authority APIs are deferred to later development steps.*
+*Note: Step 4 AI Analysis is integrated into `/complaints/analyze`. Citizen Review and final Complaint creation occur in Step 5.*
