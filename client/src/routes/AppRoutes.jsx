@@ -6,13 +6,10 @@ import Register from '../pages/auth/Register';
 import CitizenLayout from '../layouts/CitizenLayout';
 import AnalyzeComplaint from '../pages/citizen/AnalyzeComplaint';
 import ReportIssue from '../pages/citizen/ReportIssue';
-import CitizenLayout from '../layouts/CitizenLayout';
 import Dashboard from '../pages/citizen/Dashboard';
 import MyComplaints from '../pages/citizen/MyComplaints';
 import ComplaintDetails from '../pages/citizen/ComplaintDetails';
 import AuthorityComplaintDetails from '../pages/authority/ComplaintDetails';
-import AnalyzeComplaint from '../pages/citizen/AnalyzeComplaint';
-import ReportIssue from '../pages/citizen/ReportIssue';
 import Home from '../pages/Home';
 import Profile from '../pages/citizen/Profile';
 import NotFound from '../pages/NotFound';
@@ -40,7 +37,6 @@ const CitizenDashboard = () => (
 
 const AuthorityDashboard = () => <div><h2>Authority Dashboard</h2></div>;
 
-const AdminDashboard = () => <div><h2>Admin Dashboard</h2></div>;
 const AdminDashboard = () => <div><h2>Admin Dashboard</h2></div>;
 
 const AppRoutes = () => {
@@ -76,17 +72,7 @@ const AppRoutes = () => {
         </ProtectedRoute>
       } />
 
-      <Route path="/authority/dashboard" element={
-        <ProtectedRoute allowedRoles={['authority']}>
-          <AuthorityDashboard />
-        </ProtectedRoute>
-      } />
 
-      <Route path="/authority/complaints/:complaintId" element={
-        <ProtectedRoute allowedRoles={['authority']}>
-          <ComplaintDetails />
-        </ProtectedRoute>
-      } />
 
       <Route path="/admin/dashboard" element={
         <ProtectedRoute allowedRoles={['admin']}>

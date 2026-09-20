@@ -33,8 +33,7 @@ const Register = () => {
     setLoading(true);
     try {
       await register({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
         password: formData.password,
         role: 'citizen' // Hardcoded for public registration
