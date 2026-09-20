@@ -5,6 +5,7 @@ import AuthorityLayout from '../../components/authority/AuthorityLayout';
 import ComplaintStatusControl from '../../components/authority/ComplaintStatusControl';
 import ComplaintTimeline from '../../components/authority/ComplaintTimeline';
 import ComplaintEvidence from '../../components/authority/ComplaintEvidence';
+import ComplaintLocationMap from '../../components/location/ComplaintLocationMap';
 import { StatusBadge, SeverityBadge } from '../../components/admin/AdminBadges';
 import {
   ArrowLeft,
@@ -287,15 +288,7 @@ const AuthorityComplaintDetails = () => {
                 <h3 className="text-sm font-bold text-slate-900">Geographic Location</h3>
               </div>
 
-              <div className="space-y-3">
-                <p className="text-xs font-medium text-slate-800">
-                  {complaint.location?.address || 'Street address not specified'}
-                </p>
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 font-mono text-[11px] text-slate-600 space-y-1">
-                  <div>Latitude: {complaint.location?.latitude?.toFixed(5) || 'N/A'}</div>
-                  <div>Longitude: {complaint.location?.longitude?.toFixed(5) || 'N/A'}</div>
-                </div>
-              </div>
+              <ComplaintLocationMap location={complaint.location} height="220px" />
             </div>
 
             {/* Officer Assignment */}

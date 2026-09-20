@@ -4,6 +4,7 @@ import adminAPI from '../../services/admin.service';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { StatusBadge, SeverityBadge } from '../../components/admin/AdminBadges';
 import ComplaintAgentTimeline from '../../components/admin/ComplaintAgentTimeline';
+import ComplaintLocationMap from '../../components/location/ComplaintLocationMap';
 
 const ComplaintDetails = () => {
   const { complaintId } = useParams();
@@ -259,13 +260,7 @@ const ComplaintDetails = () => {
           {/* Geographic Location */}
           <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Location</h2>
-            <div className="space-y-2 text-xs">
-              <p className="text-slate-800 font-medium">{complaint.location?.address || 'No street address provided'}</p>
-              <div className="p-2.5 bg-slate-50 rounded border border-slate-100 font-mono text-[11px] text-slate-600">
-                <div>Lat: {complaint.location?.latitude}</div>
-                <div>Lng: {complaint.location?.longitude}</div>
-              </div>
-            </div>
+            <ComplaintLocationMap location={complaint.location} height="220px" />
           </div>
 
           {/* SLA Tracking Info */}
