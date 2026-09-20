@@ -1,9 +1,78 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import GlassCard from '../ui/GlassCard';
 import GlassButton from '../ui/GlassButton';
-import { ClipboardList, Edit2, Image as ImageIcon, MapPin, Sparkles } from 'lucide-react';
+import { ClipboardList, Edit2, Image as ImageIcon, MapPin, Sparkles, CheckCircle2, Loader2, Circle } from 'lucide-react';
+
+const AnalysisLoader = () => {
+  const [step, setStep] = useState(0);
+  
+  const steps = [
+    "Analyzing issue description...",
+    "Classifying complaint category...",
+    "Analyzing evidence & location...",
+    "Assessing priority & severity...",
+    "Mapping to appropriate department...",
+    "Generating formal report..."
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
+    }, 1200); // Simulate progress every 1.2s
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center justify-center p-8 space-y-6">
+      <div className="relative w-24 h-24 flex items-center justify-center">
+        <div className="absolute inset-0 border-4 border-indigo-500/20 rounded-full"></div>
+        <div className="absolute inset-0 border-4 border-indigo-400 rounded-full border-t-transparent animate-spin"></div>
+        <Sparkles className="w-8 h-8 text-indigo-400 animate-pulse" />
+      </div>
+      <div className="w-full max-w-sm space-y-3">
+        {steps.map((s, index) => {
+          let Icon = Circle;
+          let iconClass = "text-gray-600";
+          let textClass = "text-gray-500";
+          
+          if (index < step) {
+            Icon = CheckCircle2;
+            iconClass = "text-emerald-400";
+            textClass = "text-gray-300";
+          } else if (index === step) {
+            Icon = Loader2;
+            iconClass = "text-indigo-400 animate-spin";
+            textClass = "text-indigo-200 font-medium";
+          }
+
+          return (
+            <div key={index} className="flex items-center gap-3 transition-all duration-300">
+              <Icon className={`w-5 h-5 ${iconClass}`} />
+              <span className={`text-sm ${textClass} transition-colors duration-300`}>{s}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 const InputSummary = ({ description, file, location, onEdit, onSubmit, isSubmitting }) => {
+  if (isSubmitting) {
+    return (
+      <GlassCard className="overflow-hidden animate-in fade-in duration-500">
+        <div className="bg-indigo-500/5 px-6 py-5 border-b border-white/10 text-center">
+          <h3 className="text-xl font-bold text-white tracking-tight flex items-center justify-center gap-2">
+            <Sparkles className="w-5 h-5 text-indigo-400" />
+            CivicAI Analysis in Progress
+          </h3>
+        </div>
+        <AnalysisLoader />
+      </GlassCard>
+    );
+  }
+
   return (
     <GlassCard className="overflow-hidden">
       <div className="px-6 py-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-white/5 border-b border-white/10">
@@ -20,7 +89,7 @@ const InputSummary = ({ description, file, location, onEdit, onSubmit, isSubmitt
           onClick={onEdit} 
           disabled={isSubmitting}
           variant="secondary"
-          className="flex items-center gap-2 sm:w-auto w-full justify-center"
+          className="flex items-center gap-2 sm:w-auto w-full justify-center hover:scale-105 transition-transform"
         >
           <Edit2 className="w-4 h-4" />
           Edit Details
@@ -82,11 +151,10 @@ const InputSummary = ({ description, file, location, onEdit, onSubmit, isSubmitt
         <GlassButton 
           onClick={onSubmit} 
           disabled={isSubmitting}
-          loading={isSubmitting}
-          className="flex items-center gap-2 w-full sm:w-auto justify-center"
+          className="flex items-center gap-2 w-full sm:w-auto justify-center hover:scale-105 transition-transform"
         >
-          {isSubmitting ? 'Analyzing...' : 'Analyze Complaint'}
-          {!isSubmitting && <Sparkles className="w-4 h-4" />}
+          Analyze Complaint
+          <Sparkles className="w-4 h-4" />
         </GlassButton>
       </div>
     </GlassCard>

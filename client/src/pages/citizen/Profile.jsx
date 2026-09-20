@@ -23,43 +23,45 @@ const Profile = () => {
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">My Profile</h1>
-        <p className="mt-2 text-indigo-200">
+        <h1 className="text-3xl font-bold text-slate-800 tracking-tight">My Profile</h1>
+        <p className="mt-2 text-slate-600">
           View your citizen account details.
         </p>
       </div>
 
       <GlassCard className="overflow-hidden">
-        <div className="px-6 py-5 border-b border-white/10 flex items-center gap-2">
-          <User className="w-5 h-5 text-indigo-400" />
+        <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+          <div className="bg-blue-100 p-2 rounded-lg">
+            <User className="w-5 h-5 text-blue-600" />
+          </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Account Information</h3>
-            <p className="text-sm text-gray-400 mt-1">Personal details and account settings.</p>
+            <h3 className="text-lg font-bold text-slate-800">Account Information</h3>
+            <p className="text-sm text-slate-500 mt-0.5">Personal details and account settings.</p>
           </div>
         </div>
         
         <div className="p-6">
           <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
             <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-400 flex items-center gap-2 mb-1">
-                <User className="w-4 h-4 text-gray-500" /> Full name
+              <dt className="text-sm font-medium text-slate-500 flex items-center gap-2 mb-1.5">
+                <User className="w-4 h-4 text-slate-400" /> Full name
               </dt>
-              <dd className="text-base font-semibold text-white">{user.name}</dd>
+              <dd className="text-base font-semibold text-slate-800">{user.firstName} {user.lastName}</dd>
             </div>
             
             <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-400 flex items-center gap-2 mb-1">
-                <Mail className="w-4 h-4 text-gray-500" /> Email address
+              <dt className="text-sm font-medium text-slate-500 flex items-center gap-2 mb-1.5">
+                <Mail className="w-4 h-4 text-slate-400" /> Email address
               </dt>
-              <dd className="text-base font-semibold text-white">{user.email}</dd>
+              <dd className="text-base font-semibold text-slate-800">{user.email}</dd>
             </div>
             
             <div className="sm:col-span-2">
-              <dt className="text-sm font-medium text-gray-400 flex items-center gap-2 mb-2">
-                <Shield className="w-4 h-4 text-gray-500" /> Account Role
+              <dt className="text-sm font-medium text-slate-500 flex items-center gap-2 mb-2">
+                <Shield className="w-4 h-4 text-slate-400" /> Account Role
               </dt>
               <dd className="text-sm capitalize">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border border-emerald-500/30 bg-emerald-500/20 text-emerald-300 tracking-wider">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 bg-emerald-100 text-emerald-700 tracking-wider">
                   {user.role}
                 </span>
               </dd>
@@ -71,7 +73,8 @@ const Profile = () => {
       <div className="flex justify-end">
         <GlassButton
           onClick={handleLogout}
-          className="flex items-center gap-2 border-rose-500/50 bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 hover:border-rose-400"
+          variant="danger"
+          className="flex items-center gap-2"
         >
           <LogOut className="w-4 h-4" />
           Logout

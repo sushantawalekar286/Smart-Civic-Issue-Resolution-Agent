@@ -33,27 +33,27 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
       <div className="max-w-5xl w-full grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
         
         {/* LEFT: Branding / Visual */}
         <div className="hidden lg:flex flex-col justify-center space-y-8">
-          <div className="bg-indigo-500/20 p-4 rounded-2xl w-fit border border-indigo-500/30 backdrop-blur-md">
-            <ShieldAlert className="w-12 h-12 text-indigo-400" />
+          <div className="bg-blue-600 p-4 rounded-2xl w-fit border border-blue-500 shadow-md">
+            <ShieldAlert className="w-12 h-12 text-white" />
           </div>
-          <h1 className="text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Resolve Civic Issues <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Smarter</span>
+          <h1 className="text-5xl font-extrabold text-slate-800 tracking-tight leading-tight">
+            Resolve Civic Issues <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Smarter</span>
           </h1>
-          <p className="text-indigo-200 text-lg leading-relaxed max-w-md">
+          <p className="text-slate-600 text-lg leading-relaxed max-w-md">
             Report civic problems, let AI analyze the issue, and track the resolution automatically. Build a better city together.
           </p>
           <div className="space-y-4 pt-4">
-            <div className="flex items-center text-indigo-100 font-medium bg-white/5 p-3 rounded-xl border border-white/10 w-fit backdrop-blur-sm">
-              <span className="w-2 h-2 rounded-full bg-indigo-400 mr-3"></span>
+            <div className="flex items-center text-slate-700 font-medium bg-white p-3 rounded-xl border border-slate-200 w-fit shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-blue-500 mr-3"></span>
               AI-Powered Issue Routing
             </div>
-            <div className="flex items-center text-indigo-100 font-medium bg-white/5 p-3 rounded-xl border border-white/10 w-fit backdrop-blur-sm">
-              <span className="w-2 h-2 rounded-full bg-purple-400 mr-3"></span>
+            <div className="flex items-center text-slate-700 font-medium bg-white p-3 rounded-xl border border-slate-200 w-fit shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-cyan-500 mr-3"></span>
               Real-time Status Tracking
             </div>
           </div>
@@ -62,32 +62,32 @@ const Login = () => {
         {/* RIGHT: Login Card */}
         <div className="w-full max-w-md mx-auto lg:max-w-none">
           <div className="lg:hidden flex flex-col items-center mb-8">
-            <div className="bg-indigo-500/20 p-3 rounded-xl border border-indigo-500/30 mb-4">
-              <ShieldAlert className="w-8 h-8 text-indigo-400" />
+            <div className="bg-blue-600 p-3 rounded-xl border border-blue-500 mb-4 shadow-sm">
+              <ShieldAlert className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-white text-center tracking-tight">CivicAI Portal</h1>
+            <h1 className="text-2xl font-bold text-slate-800 text-center tracking-tight">SmartCivic Portal</h1>
           </div>
 
           <GlassCard className="p-8">
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-white tracking-tight">
+              <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
                 Welcome back
               </h2>
-              <p className="mt-2 text-indigo-200/70">
+              <p className="mt-2 text-slate-500">
                 Sign in to track your civic complaints
               </p>
             </div>
 
             {error && (
-              <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 mb-6 flex items-start">
-                <AlertCircle className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
-                <p className="ml-3 text-sm text-rose-200 font-medium">{error}</p>
+              <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-6 flex items-start">
+                <AlertCircle className="w-5 h-5 text-rose-500 mt-0.5 shrink-0" />
+                <p className="ml-3 text-sm text-rose-700 font-medium">{error}</p>
               </div>
             )}
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1.5">
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
                   Email address
                 </label>
                 <GlassInput
@@ -103,7 +103,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1.5">
+                <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
                   Password
                 </label>
                 <div className="relative">
@@ -120,7 +120,7 @@ const Login = () => {
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                     <button
                       type="button"
-                      className="text-gray-400 hover:text-white focus:outline-none transition-colors"
+                      className="text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -140,10 +140,10 @@ const Login = () => {
               </div>
             </form>
 
-            <div className="mt-8 pt-6 border-t border-white/10 text-center">
-              <p className="text-gray-400 text-sm">
+            <div className="mt-8 pt-6 border-t border-slate-200 text-center">
+              <p className="text-slate-500 text-sm">
                 Don't have an account?{' '}
-                <Link to="/register" className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
+                <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
                   Create Citizen Account
                 </Link>
               </p>

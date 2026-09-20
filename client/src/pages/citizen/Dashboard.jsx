@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { complaintAPI } from '../../services/complaint.service';
 import GlassCard from '../../components/ui/GlassCard';
 import StatusBadge from '../../components/complaints/StatusBadge';
 import SeverityBadge from '../../components/complaints/SeverityBadge';
 import GlassButton from '../../components/ui/GlassButton';
-import { FileText, AlertCircle, Clock, CheckCircle, ArrowRight, Activity, Plus } from 'lucide-react';
+import GlassSkeleton from '../../components/ui/GlassSkeleton';
+import { FileText, AlertCircle, Clock, CheckCircle, ArrowRight, Activity, Plus, AlertTriangle } from 'lucide-react';
 
 const Dashboard = () => {
+  const { user } = useAuth();
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -22,7 +25,7 @@ const Dashboard = () => {
       const response = await complaintAPI.getMyComplaints();
       setComplaints(response.data?.data || []);
     } catch (err) {
-      setError('Failed to fetch dashboard data.');
+      setError('Failed to fetch dashboard data. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -33,13 +36,28 @@ const Dashboard = () => {
     { name: 'Submitted', stat: complaints.filter(c => c.status === 'SUBMITTED').length, icon: <AlertCircle className="w-6 h-6 text-cyan-400" />, bg: 'bg-cyan-500/20' },
     { name: 'In Progress', stat: complaints.filter(c => c.status === 'IN_PROGRESS' || c.status === 'ASSIGNED').length, icon: <Clock className="w-6 h-6 text-amber-400" />, bg: 'bg-amber-500/20' },
     { name: 'Resolved', stat: complaints.filter(c => c.status === 'RESOLVED').length, icon: <CheckCircle className="w-6 h-6 text-emerald-400" />, bg: 'bg-emerald-500/20' },
+    { name: 'Escalated', stat: complaints.filter(c => c.status === 'ESCALATED').length, icon: <AlertTriangle className="w-6 h-6 text-rose-400" />, bg: 'bg-rose-500/20' },
   ];
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-        <p className="mt-4 text-indigo-200">Loading your dashboard...</p>
+      <div className="space-y-8">
+        <div className="flex justify-between items-center">
+          <div>
+            <GlassSkeleton className="w-64 h-10 mb-2" />
+            <GlassSkeleton className="w-96 h-5" />
+          </div>
+          <GlassSkeleton className="w-32 h-10" />
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {[1, 2, 3, 4, 5].map(i => (
+            <GlassSkeleton key={i} className="w-full h-24" />
+          ))}
+        </div>
+        <div>
+          <GlassSkeleton className="w-48 h-8 mb-4" />
+          <GlassSkeleton className="w-full h-64" />
+        </div>
       </div>
     );
   }
@@ -49,11 +67,11 @@ const Dashboard = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Welcome back, {user?.name?.split(' ')[0] || 'Citizen'}</h1>
           <p className="text-indigo-200 mt-1">Overview of your civic issue reports and their current status.</p>
         </div>
         <Link to="/citizen/report">
-          <GlassButton className="flex items-center gap-2">
+          <GlassButton className="flex items-center gap-2 transition-transform hover:scale-105 active:scale-95">
             <Plus className="w-5 h-5" />
             Report Issue
           </GlassButton>
@@ -61,16 +79,20 @@ const Dashboard = () => {
       </div>
 
       {error && (
-        <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 flex items-start">
+        <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 flex items-start animate-in slide-in-from-top-2">
           <AlertCircle className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
           <p className="ml-3 text-sm text-rose-200 font-medium">{error}</p>
         </div>
       )}
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((item) => (
-          <GlassCard key={item.name} className="p-6 relative overflow-hidden group">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {stats.map((item, idx) => (
+          <GlassCard 
+            key={item.name} 
+            className="p-6 relative overflow-hidden group transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+            style={{ animationDelay: `${idx * 100}ms` }}
+          >
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/5 rounded-full blur-xl group-hover:bg-indigo-500/10 transition-colors"></div>
             <div className="flex items-center gap-4 relative z-10">
               <div className={`p-3 rounded-xl ${item.bg} border border-white/10`}>
@@ -93,24 +115,24 @@ const Dashboard = () => {
             Recent Complaints
           </h2>
           <Link to="/citizen/complaints" className="text-sm font-medium text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors">
-            View all <ArrowRight className="w-4 h-4" />
+            View all <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
 
         {complaints.length === 0 ? (
-          <GlassCard className="p-12 text-center flex flex-col items-center">
+          <GlassCard className="p-12 text-center flex flex-col items-center animate-in slide-in-from-bottom-4">
             <div className="bg-white/5 p-4 rounded-full mb-4">
               <FileText className="w-8 h-8 text-indigo-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">No complaints found</h3>
             <p className="text-gray-400 mb-6 max-w-sm">You haven't submitted any civic issues yet. Report an issue to help improve your community.</p>
             <Link to="/citizen/report">
-              <GlassButton variant="primary">Report an Issue</GlassButton>
+              <GlassButton variant="primary" className="transition-transform hover:scale-105">Report an Issue</GlassButton>
             </Link>
           </GlassCard>
         ) : (
-          <GlassCard className="overflow-hidden">
-            <div className="overflow-x-auto">
+          <GlassCard className="overflow-hidden animate-in slide-in-from-bottom-4">
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-white/5 border-b border-white/10">
@@ -124,11 +146,11 @@ const Dashboard = () => {
                 </thead>
                 <tbody className="divide-y divide-white/10">
                   {complaints.slice(0, 5).map((complaint) => (
-                    <tr key={complaint._id} className="hover:bg-white/5 transition-colors">
+                    <tr key={complaint._id} className="hover:bg-white/5 transition-colors group cursor-pointer" onClick={() => window.location.href = `/citizen/complaints/${complaint._id}`}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <Link to={`/citizen/complaints/${complaint._id}`} className="text-sm font-semibold text-indigo-400 hover:text-indigo-300">
+                        <span className="text-sm font-semibold text-indigo-400 group-hover:text-indigo-300 transition-colors">
                           {complaint.complaintId}
-                        </Link>
+                        </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                         {complaint.issueType}
@@ -149,6 +171,23 @@ const Dashboard = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile View */}
+            <div className="md:hidden flex flex-col divide-y divide-white/10">
+              {complaints.slice(0, 5).map((complaint) => (
+                <Link key={complaint._id} to={`/citizen/complaints/${complaint._id}`} className="p-4 hover:bg-white/5 transition-colors active:bg-white/10">
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-sm font-semibold text-indigo-400">{complaint.complaintId}</span>
+                    <span className="text-xs text-gray-400">{new Date(complaint.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <h4 className="text-base font-semibold text-white mb-3">{complaint.issueType}</h4>
+                  <div className="flex flex-wrap gap-2 items-center justify-between">
+                    <StatusBadge status={complaint.status} />
+                    <SeverityBadge severity={complaint.severity} />
+                  </div>
+                </Link>
+              ))}
             </div>
           </GlassCard>
         )}

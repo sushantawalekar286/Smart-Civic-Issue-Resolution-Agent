@@ -26,18 +26,18 @@ const CitizenLayout = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row relative">
+    <div className="min-h-screen flex flex-col md:flex-row relative bg-slate-50">
       {/* Mobile Top Navbar */}
-      <nav className="md:hidden sticky top-0 z-50 bg-white/10 backdrop-blur-xl border-b border-white/20 px-4 py-3 flex justify-between items-center shadow-lg">
+      <nav className="md:hidden sticky top-0 z-50 bg-white border-b border-slate-200 px-4 py-3 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-2">
-          <div className="bg-indigo-500 p-1.5 rounded-lg">
+          <div className="bg-blue-600 p-1.5 rounded-lg">
             <ShieldAlert className="w-5 h-5 text-white" />
           </div>
-          <span className="text-white font-semibold tracking-wide">CivicAI</span>
+          <span className="text-slate-800 font-bold tracking-wide">SmartCivic</span>
         </div>
         <button 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="text-gray-200 hover:text-white focus:outline-none p-1"
+          className="text-slate-500 hover:text-slate-800 focus:outline-none p-1"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -45,7 +45,7 @@ const CitizenLayout = () => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-[60px] left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-3xl border-b border-white/10 shadow-2xl">
+        <div className="md:hidden absolute top-[60px] left-0 right-0 z-40 bg-white border-b border-slate-200 shadow-xl">
           <div className="px-4 py-6 flex flex-col gap-2">
             {navigation.map((item) => (
               <Link
@@ -54,22 +54,22 @@ const CitizenLayout = () => {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   isActive(item.href)
-                    ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
-                    : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                    ? 'bg-blue-50 text-blue-700 font-semibold'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
                 {item.icon}
                 <span className="font-medium">{item.name}</span>
               </Link>
             ))}
-            <div className="h-px bg-white/10 my-4"></div>
+            <div className="h-px bg-slate-100 my-4"></div>
             <div className="px-4 mb-2">
-              <p className="text-sm text-gray-400">Logged in as</p>
-              <p className="text-white font-medium">{user?.firstName} {user?.lastName}</p>
+              <p className="text-sm text-slate-500">Logged in as</p>
+              <p className="text-slate-800 font-medium">{user?.firstName} {user?.lastName}</p>
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-all text-left"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-rose-500 hover:bg-rose-50 transition-all text-left"
             >
               <LogOut className="w-5 h-5" />
               <span className="font-medium">Logout</span>
@@ -79,14 +79,14 @@ const CitizenLayout = () => {
       )}
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-72 h-screen sticky top-0 bg-white/5 backdrop-blur-2xl border-r border-white/10 shadow-2xl">
-        <div className="p-6 flex items-center gap-3 border-b border-white/10">
-          <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-2 rounded-xl shadow-lg shadow-indigo-500/30">
+      <aside className="hidden md:flex flex-col w-72 h-screen sticky top-0 bg-white border-r border-slate-200 shadow-sm z-10">
+        <div className="p-6 flex items-center gap-3 border-b border-slate-100">
+          <div className="bg-blue-600 p-2 rounded-xl shadow-md shadow-blue-600/20">
             <ShieldAlert className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">CivicAI</h1>
-            <p className="text-xs text-indigo-300 font-medium tracking-wider uppercase">Citizen Portal</p>
+            <h1 className="text-xl font-bold text-slate-800 tracking-tight">SmartCivic</h1>
+            <p className="text-xs text-slate-500 font-medium tracking-wider uppercase">Citizen Portal</p>
           </div>
         </div>
 
@@ -97,8 +97,8 @@ const CitizenLayout = () => {
               to={item.href}
               className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 ${
                 isActive(item.href)
-                  ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shadow-[inset_0_0_20px_rgba(99,102,241,0.1)]'
-                  : 'text-gray-400 hover:bg-white/10 hover:text-gray-100 border border-transparent'
+                  ? 'bg-blue-50 text-blue-700 font-semibold'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent'
               }`}
             >
               {item.icon}
@@ -107,19 +107,19 @@ const CitizenLayout = () => {
           ))}
         </div>
 
-        <div className="p-4 border-t border-white/10 bg-white/5">
+        <div className="p-4 border-t border-slate-100 bg-slate-50/50">
           <div className="flex items-center gap-3 mb-4 px-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg">
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
               {user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-medium text-white truncate">{user?.firstName} {user?.lastName}</p>
-              <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+              <p className="text-sm font-medium text-slate-800 truncate">{user?.firstName} {user?.lastName}</p>
+              <p className="text-xs text-slate-500 truncate">{user?.email}</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-all border border-transparent hover:border-rose-500/20"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-all border border-transparent hover:border-rose-100"
           >
             <LogOut className="w-4 h-4" />
             <span className="font-medium text-sm">Logout</span>
@@ -134,8 +134,8 @@ const CitizenLayout = () => {
         </div>
         
         {/* Footer inside main to respect sidebar space */}
-        <footer className="mt-auto border-t border-white/10 py-6 px-4">
-          <p className="text-center text-xs text-gray-500">
+        <footer className="mt-auto border-t border-slate-200 py-6 px-4">
+          <p className="text-center text-xs text-slate-500">
             &copy; {new Date().getFullYear()} Smart Civic Issue Resolution Agent. All rights reserved.
           </p>
         </footer>

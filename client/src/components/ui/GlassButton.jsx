@@ -8,13 +8,13 @@ const GlassButton = ({
   loading = false,
   ...props 
 }) => {
-  const baseStyle = "relative inline-flex items-center justify-center gap-2 px-4 py-2 font-medium rounded-xl transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900";
+  const baseStyle = "relative inline-flex items-center justify-center gap-2 px-4 py-2 font-medium rounded-xl transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white";
   
   const variants = {
-    primary: "bg-indigo-600/80 hover:bg-indigo-500/90 text-white shadow-[0_0_15px_rgba(79,70,229,0.5)] border border-indigo-400/50 hover:shadow-[0_0_20px_rgba(79,70,229,0.7)] focus:ring-indigo-500",
-    secondary: "bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md focus:ring-white/50",
-    danger: "bg-red-500/80 hover:bg-red-400/90 text-white shadow-[0_0_15px_rgba(239,68,68,0.5)] border border-red-400/50 focus:ring-red-500",
-    ghost: "bg-transparent hover:bg-white/10 text-gray-300 hover:text-white border border-transparent focus:ring-white/30"
+    primary: "bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow focus:ring-blue-500",
+    secondary: "bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm focus:ring-slate-200",
+    danger: "bg-rose-500 hover:bg-rose-600 text-white shadow-sm hover:shadow focus:ring-rose-500",
+    ghost: "bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-transparent focus:ring-slate-200"
   };
 
   const disabledStyle = "opacity-50 cursor-not-allowed transform-none";

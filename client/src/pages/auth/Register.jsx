@@ -12,13 +12,11 @@ const Register = () => {
     lastName: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    confirmPassword: ''
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -36,47 +34,39 @@ const Register = () => {
 
     setLoading(true);
     try {
-      await register({
-        name: `${formData.firstName} ${formData.lastName}`.trim(),
-        email: formData.email,
-        password: formData.password,
-        role: 'citizen' // Hardcoded for public registration
-      });
+      const { confirmPassword, ...registerData } = formData;
+      await register(registerData);
       navigate('/citizen/dashboard');
     } catch (err) {
-      setError(err.response?.data?.error || err.response?.data?.message || 'Registration failed. Please try again.');
+      setError(err.response?.data?.error || err.response?.data?.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
       <div className="max-w-5xl w-full grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
         
         {/* LEFT: Branding / Visual */}
         <div className="hidden lg:flex flex-col justify-center space-y-8">
-          <div className="bg-indigo-500/20 p-4 rounded-2xl w-fit border border-indigo-500/30 backdrop-blur-md">
-            <ShieldAlert className="w-12 h-12 text-indigo-400" />
+          <div className="bg-blue-600 p-4 rounded-2xl w-fit border border-blue-500 shadow-md">
+            <ShieldAlert className="w-12 h-12 text-white" />
           </div>
-          <h1 className="text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Join the Smart Civic Platform
+          <h1 className="text-5xl font-extrabold text-slate-800 tracking-tight leading-tight">
+            Join <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">SmartCivic</span>
           </h1>
-          <p className="text-indigo-200 text-lg leading-relaxed max-w-md">
-            Create a citizen account to report issues, track their progress, and improve your local community.
+          <p className="text-slate-600 text-lg leading-relaxed max-w-md">
+            Create an account to report issues in your neighborhood, track their resolution progress, and help improve your city.
           </p>
           <div className="space-y-4 pt-4">
-            <div className="flex items-center text-indigo-100 font-medium bg-white/5 p-3 rounded-xl border border-white/10 w-fit backdrop-blur-sm">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-500 text-white text-xs mr-3">1</span>
-              Create an Account
+            <div className="flex items-center text-slate-700 font-medium bg-white p-3 rounded-xl border border-slate-200 w-fit shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-blue-500 mr-3"></span>
+              Fast Issue Resolution
             </div>
-            <div className="flex items-center text-indigo-100 font-medium bg-white/5 p-3 rounded-xl border border-white/10 w-fit backdrop-blur-sm">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-500 text-white text-xs mr-3">2</span>
-              Submit Issue Reports with Evidence
-            </div>
-            <div className="flex items-center text-indigo-100 font-medium bg-white/5 p-3 rounded-xl border border-white/10 w-fit backdrop-blur-sm">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-500 text-white text-xs mr-3">3</span>
-              Track AI-assigned Department Responses
+            <div className="flex items-center text-slate-700 font-medium bg-white p-3 rounded-xl border border-slate-200 w-fit shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-cyan-500 mr-3"></span>
+              Direct Department Routing
             </div>
           </div>
         </div>
@@ -84,37 +74,34 @@ const Register = () => {
         {/* RIGHT: Register Card */}
         <div className="w-full max-w-md mx-auto lg:max-w-none">
           <div className="lg:hidden flex flex-col items-center mb-8">
-            <div className="bg-indigo-500/20 p-3 rounded-xl border border-indigo-500/30 mb-4">
-              <ShieldAlert className="w-8 h-8 text-indigo-400" />
+            <div className="bg-blue-600 p-3 rounded-xl border border-blue-500 mb-4 shadow-sm">
+              <ShieldAlert className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-white text-center tracking-tight">Citizen Registration</h1>
+            <h1 className="text-2xl font-bold text-slate-800 text-center tracking-tight">SmartCivic Portal</h1>
           </div>
 
           <GlassCard className="p-8">
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-white tracking-tight">
-                Create an account
+              <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
+                Create Account
               </h2>
-              <p className="mt-2 text-indigo-200/70">
-                Join to report issues in your neighborhood
+              <p className="mt-2 text-slate-500">
+                Sign up as a citizen to get started
               </p>
             </div>
 
             {error && (
-              <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 mb-6 flex items-start">
-                <AlertCircle className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
-                <p className="ml-3 text-sm text-rose-200 font-medium">{error}</p>
+              <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-6 flex items-start">
+                <AlertCircle className="w-5 h-5 text-rose-500 mt-0.5 shrink-0" />
+                <p className="ml-3 text-sm text-rose-700 font-medium">{error}</p>
               </div>
             )}
 
             <form className="space-y-5" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-1.5">
-                    First Name
-                  </label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">First Name</label>
                   <GlassInput
-                    id="firstName"
                     name="firstName"
                     type="text"
                     required
@@ -124,11 +111,8 @@ const Register = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-1.5">
-                    Last Name
-                  </label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Last Name</label>
                   <GlassInput
-                    id="lastName"
                     name="lastName"
                     type="text"
                     required
@@ -140,14 +124,10 @@ const Register = () => {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Email address
-                </label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Email address</label>
                 <GlassInput
-                  id="email"
                   name="email"
                   type="email"
-                  autoComplete="email"
                   required
                   value={formData.email}
                   onChange={handleChange}
@@ -156,75 +136,52 @@ const Register = () => {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Password
-                </label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
                 <div className="relative">
                   <GlassInput
-                    id="password"
                     name="password"
                     type={showPassword ? "text" : "password"}
-                    autoComplete="new-password"
                     required
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
                   />
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                    <button
-                      type="button"
-                      className="text-gray-400 hover:text-white focus:outline-none transition-colors"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Confirm Password
-                </label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Confirm Password</label>
                 <div className="relative">
                   <GlassInput
-                    id="confirmPassword"
                     name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    autoComplete="new-password"
+                    type={showPassword ? "text" : "password"}
                     required
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="••••••••"
                   />
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                    <button
-                      type="button"
-                      className="text-gray-400 hover:text-white focus:outline-none transition-colors"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    >
-                      {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
                 </div>
               </div>
 
               <div className="pt-2">
-                <GlassButton
-                  type="submit"
-                  loading={loading}
-                  className="w-full"
-                >
-                  {loading ? 'Creating account...' : 'Register as Citizen'}
+                <GlassButton type="submit" loading={loading} className="w-full">
+                  {loading ? 'Creating account...' : 'Create Account'}
                 </GlassButton>
               </div>
             </form>
 
-            <div className="mt-8 pt-6 border-t border-white/10 text-center">
-              <p className="text-gray-400 text-sm">
+            <div className="mt-8 pt-6 border-t border-slate-200 text-center">
+              <p className="text-slate-500 text-sm">
                 Already have an account?{' '}
-                <Link to="/login" className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
-                  Log in instead
+                <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                  Sign in
                 </Link>
               </p>
             </div>
