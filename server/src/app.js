@@ -14,8 +14,8 @@ app.use(cors({
   credentials: true
 }));
 
-// Route placeholders for future implementation
-// app.use('/api/v1/complaints', complaintRoutes);
+const complaintRoutes = require('./routes/complaint.routes');
+app.use('/api/v1/complaints', complaintRoutes);
 // app.use('/api/v1/authority', authorityRoutes);
 // app.use('/api/v1/admin', adminRoutes);
 

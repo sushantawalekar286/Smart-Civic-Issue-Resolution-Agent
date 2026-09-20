@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
+import AnalyzeComplaint from '../pages/citizen/AnalyzeComplaint';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
@@ -33,6 +34,18 @@ const AppRoutes = () => {
       <Route path="/citizen/dashboard" element={
         <ProtectedRoute allowedRoles={['citizen']}>
           <CitizenDashboard />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/citizen/report" element={
+        <ProtectedRoute allowedRoles={['citizen']}>
+          <div><h2>Report Issue Placeholder</h2></div>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/citizen/analyze/:id" element={
+        <ProtectedRoute allowedRoles={['citizen']}>
+          <AnalyzeComplaint />
         </ProtectedRoute>
       } />
 
