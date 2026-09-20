@@ -23,7 +23,7 @@ class GeminiClient {
    * Dynamically fetch model from process environment
    */
   get model() {
-    return (process.env.GEMINI_MODEL || 'gemini-1.5-flash').trim();
+    return (process.env.GEMINI_MODEL || 'gemini-flash-latest').trim();
   }
 
   /**
@@ -162,9 +162,11 @@ class GeminiClient {
 
     const modelsToTry = [
       this.model,
-      'gemini-1.5-flash',
-      'gemini-2.0-flash',
-      'gemini-1.5-pro'
+      'gemini-flash-latest',
+      'gemini-3.8-flash',
+      'gemini-3.7-flash',
+      'gemini-3.5-flash',
+      'gemini-3.6-flash'
     ];
     // De-duplicate model list
     const candidateModels = [...new Set(modelsToTry)];
@@ -223,25 +225,45 @@ class GeminiClient {
 
         if (!response.ok) {
           const errorText = await response.text();
-          // If model is not found (404), try the next candidate model
-          if (response.status === 404 && candidateModels.indexOf(currentModel) < candidateModels.length - 1) {
-            console.warn(`[GEMINI_MODEL_RETRY] Model "${currentModel}" returned 404. Attempting alternative model...`);
+          let waitMs = 1000;
+
+          try {
+            const errObj = JSON.parse(errorText);
+            const retryInfo = errObj?.error?.details?.find(d => d && d['@type'] && d['@type'].includes('RetryInfo'));
+            if (retryInfo?.retryDelay) {
+              const sec = parseFloat(retryInfo.retryDelay.replace('s', ''));
+              if (!isNaN(sec) && sec > 0 && sec <= 3) {
+                waitMs = Math.ceil(sec * 1000) + 200;
+              }
+            }
+          } catch (_) {}
+
+          // If model is not found (404), high demand (503), or quota exceeded (429), try next candidate model
+          if ([404, 429, 503].includes(response.status) && candidateModels.indexOf(currentModel) < candidateModels.length - 1) {
+            console.warn(`[GEMINI_MODEL_RETRY] Model "${currentModel}" returned ${response.status}. Waiting ${waitMs}ms before trying alternative model...`);
             lastError = new Error(`Gemini API error [${response.status}]: ${errorText}`);
+            await new Promise(r => setTimeout(r, waitMs));
             continue;
           }
           throw new Error(`Gemini API error [${response.status}]: ${errorText}`);
         }
 
         const data = await response.json();
-        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const textParts = data?.candidates?.[0]?.content?.parts || [];
+        let rawText = '';
+        for (const part of textParts) {
+          if (part?.text) {
+            rawText += part.text;
+          }
+        }
 
         const parsedJson = this.extractJson(rawText);
         this.lastProvider = 'GEMINI';
         return parsedJson;
       } catch (err) {
         lastError = err;
-        // If this wasn't a 404 model issue, break to avoid useless iterations on invalid key / rate limit
-        if (!err.message.includes('[404]')) {
+        const isRetryable = err.message.includes('[404]') || err.message.includes('[429]') || err.message.includes('[503]');
+        if (!isRetryable) {
           break;
         }
       }
