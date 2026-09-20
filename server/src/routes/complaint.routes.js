@@ -22,4 +22,11 @@ router.post('/analyze', protect, authorize('citizen'), upload.single('image'), v
  */
 router.post('/', protect, authorize('citizen'), complaintController.submitComplaint);
 
+/**
+ * @route GET /api/v1/complaints/:complaintId/agent-actions
+ * @desc Get all agent actions for a complaint (Admin & Authority)
+ * @access Private (Authority, Admin)
+ */
+router.get('/:complaintId/agent-actions', protect, authorize('authority', 'admin'), complaintController.getComplaintAgentActions);
+
 module.exports = router;
