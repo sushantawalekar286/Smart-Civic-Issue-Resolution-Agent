@@ -5,6 +5,8 @@ import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
 
 import ReportIssue from '../pages/citizen/ReportIssue';
+import AuthorityDashboard from '../pages/authority/Dashboard';
+import ComplaintDetails from '../pages/authority/ComplaintDetails';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
@@ -27,7 +29,6 @@ const CitizenDashboard = () => (
     <p><Link to="/citizen/report">Report a Civic Issue</Link></p>
   </div>
 );
-const AuthorityDashboard = () => <div><h2>Authority Dashboard</h2></div>;
 const AdminDashboard = () => <div><h2>Admin Dashboard</h2></div>;
 
 const AppRoutes = () => {
@@ -52,6 +53,12 @@ const AppRoutes = () => {
       <Route path="/authority/dashboard" element={
         <ProtectedRoute allowedRoles={['authority']}>
           <AuthorityDashboard />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/authority/complaints/:complaintId" element={
+        <ProtectedRoute allowedRoles={['authority']}>
+          <ComplaintDetails />
         </ProtectedRoute>
       } />
 
