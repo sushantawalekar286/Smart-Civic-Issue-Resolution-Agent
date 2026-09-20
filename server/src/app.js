@@ -5,6 +5,8 @@ const { errorHandler } = require('./middleware/error.middleware');
 
 const authRoutes = require('./routes/auth.routes');
 
+const complaintRoutes = require('./routes/complaint.routes');
+
 const app = express();
 
 app.use(express.json());

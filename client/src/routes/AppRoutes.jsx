@@ -1,9 +1,11 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
 import AnalyzeComplaint from '../pages/citizen/AnalyzeComplaint';
+
+import ReportIssue from '../pages/citizen/ReportIssue';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
@@ -20,7 +22,12 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 };
 
 // Placeholder dashboards to test routing
-const CitizenDashboard = () => <div><h2>Citizen Dashboard</h2></div>;
+const CitizenDashboard = () => (
+  <div>
+    <h2>Citizen Dashboard</h2>
+    <p><Link to="/citizen/report">Report a Civic Issue</Link></p>
+  </div>
+);
 const AuthorityDashboard = () => <div><h2>Authority Dashboard</h2></div>;
 const AdminDashboard = () => <div><h2>Admin Dashboard</h2></div>;
 
@@ -46,6 +53,12 @@ const AppRoutes = () => {
       <Route path="/citizen/analyze/:id" element={
         <ProtectedRoute allowedRoles={['citizen']}>
           <AnalyzeComplaint />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/citizen/report" element={
+        <ProtectedRoute allowedRoles={['citizen']}>
+          <ReportIssue />
         </ProtectedRoute>
       } />
 
