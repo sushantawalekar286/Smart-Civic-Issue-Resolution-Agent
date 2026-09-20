@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { protect, requireRole, authorize } = require('../middleware/auth.middleware');
+const { protect, authorize } = require('../middleware/auth.middleware');
 const complaintController = require('../controllers/complaint.controller');
 const { validateComplaintIntake } = require('../validators/complaint.validator');
 
@@ -20,6 +20,6 @@ router.post('/analyze', protect, authorize('citizen'), upload.single('image'), v
  * @desc Submit a final complaint using an analysis token
  * @access Private (Citizen)
  */
-router.post('/', protect, requireRole('citizen'), complaintController.submitComplaint);
+router.post('/', protect, authorize('citizen'), complaintController.submitComplaint);
 
 module.exports = router;
