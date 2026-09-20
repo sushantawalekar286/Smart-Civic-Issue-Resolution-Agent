@@ -4,6 +4,8 @@ import EvidenceUploader from './EvidenceUploader';
 import LocationPicker from './LocationPicker';
 import InputSummary from './InputSummary';
 import { complaintAPI } from '../../services/complaint.service';
+import GlassButton from '../ui/GlassButton';
+import { AlertCircle, ArrowRight } from 'lucide-react';
 
 const ComplaintForm = ({ onAnalyzed }) => {
   const [description, setDescription] = useState('');
@@ -60,19 +62,11 @@ const ComplaintForm = ({ onAnalyzed }) => {
 
   if (step === 2) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
         {submitError && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-700">{submitError}</p>
-              </div>
-            </div>
+          <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 flex items-start">
+            <AlertCircle className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
+            <p className="ml-3 text-sm text-rose-200 font-medium">{submitError}</p>
           </div>
         )}
         <InputSummary 
@@ -88,10 +82,10 @@ const ComplaintForm = ({ onAnalyzed }) => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
       <div>
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Issue Details</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="text-xl font-bold text-white tracking-tight">Issue Details</h3>
+        <p className="mt-1 text-sm text-indigo-200">
           Please provide a detailed description of the problem.
         </p>
         <div className="mt-4">
@@ -103,9 +97,9 @@ const ComplaintForm = ({ onAnalyzed }) => {
         </div>
       </div>
 
-      <div className="pt-6 border-t border-gray-200">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Evidence (Optional)</h3>
-        <p className="mt-1 text-sm text-gray-500">
+      <div className="pt-6 border-t border-white/10">
+        <h3 className="text-xl font-bold text-white tracking-tight">Evidence (Optional)</h3>
+        <p className="mt-1 text-sm text-indigo-200">
           Upload a clear photo of the issue.
         </p>
         <div className="mt-4">
@@ -117,9 +111,9 @@ const ComplaintForm = ({ onAnalyzed }) => {
         </div>
       </div>
 
-      <div className="pt-6 border-t border-gray-200">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Location</h3>
-        <p className="mt-1 text-sm text-gray-500">
+      <div className="pt-6 border-t border-white/10">
+        <h3 className="text-xl font-bold text-white tracking-tight">Location</h3>
+        <p className="mt-1 text-sm text-indigo-200">
           Pinpoint the exact location of the issue.
         </p>
         <div className="mt-4">
@@ -131,16 +125,11 @@ const ComplaintForm = ({ onAnalyzed }) => {
         </div>
       </div>
       
-      <div className="pt-5 border-t border-gray-200">
-        <div className="flex justify-end">
-          <button 
-            type="button" 
-            onClick={handleReview} 
-            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Review Complaint
-          </button>
-        </div>
+      <div className="pt-6 border-t border-white/10 flex justify-end">
+        <GlassButton onClick={handleReview} className="flex items-center gap-2">
+          Review Complaint
+          <ArrowRight className="w-4 h-4" />
+        </GlassButton>
       </div>
     </div>
   );

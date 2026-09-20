@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { X, Image as ImageIcon } from 'lucide-react';
 
 const ComplaintEvidence = ({ evidence = [] }) => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   if (!evidence || evidence.length === 0) {
     return (
-      <div className="text-gray-500 italic text-sm">
-        No evidence provided.
+      <div className="flex flex-col items-center justify-center py-8 text-indigo-300">
+        <ImageIcon className="w-8 h-8 opacity-50 mb-2" />
+        <p className="text-sm font-medium">No evidence provided.</p>
       </div>
     );
   }
@@ -15,8 +17,9 @@ const ComplaintEvidence = ({ evidence = [] }) => {
 
   if (images.length === 0) {
     return (
-      <div className="text-gray-500 italic text-sm">
-        No image evidence provided.
+      <div className="flex flex-col items-center justify-center py-8 text-indigo-300">
+        <ImageIcon className="w-8 h-8 opacity-50 mb-2" />
+        <p className="text-sm font-medium">No image evidence provided.</p>
       </div>
     );
   }
@@ -27,13 +30,14 @@ const ComplaintEvidence = ({ evidence = [] }) => {
         {images.map((img, idx) => (
           <div 
             key={idx} 
-            className="relative rounded-lg overflow-hidden border border-gray-200 cursor-pointer hover:opacity-80 transition-opacity"
+            className="relative rounded-xl overflow-hidden border border-white/10 cursor-pointer group hover:border-indigo-500/50 transition-all bg-black/40"
             onClick={() => setSelectedImage(img.url)}
           >
+            <div className="absolute inset-0 bg-indigo-500/0 group-hover:bg-indigo-500/20 transition-colors z-10"></div>
             <img 
               src={img.url} 
               alt={img.fileName || `Evidence ${idx + 1}`} 
-              className="w-full h-32 object-cover"
+              className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-500"
               onError={(e) => {
                 e.target.onerror = null; 
                 e.target.src = 'https://via.placeholder.com/300?text=Image+Unavailable';
@@ -46,22 +50,20 @@ const ComplaintEvidence = ({ evidence = [] }) => {
       {/* Lightbox Modal */}
       {selectedImage && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/90 backdrop-blur-sm p-4 animate-in fade-in duration-300"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center">
+          <div className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center animate-in zoom-in-95 duration-300">
             <button 
-              className="absolute top-4 right-4 text-white hover:text-gray-300 focus:outline-none"
+              className="absolute -top-12 right-0 md:-right-12 md:top-0 text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors focus:outline-none"
               onClick={() => setSelectedImage(null)}
             >
-              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="h-8 w-8" />
             </button>
             <img 
               src={selectedImage} 
               alt="Enlarged Evidence" 
-              className="max-w-full max-h-full object-contain rounded shadow-lg"
+              className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 bg-black/50"
               onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the image itself
             />
           </div>

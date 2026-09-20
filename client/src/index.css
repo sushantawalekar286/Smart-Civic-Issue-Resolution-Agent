@@ -1,13 +1,12 @@
 @import "tailwindcss";
-@import "tailwindcss";
 
 :root {
-  --text: #4b5563;
-  --text-h: #111827;
-  --bg: #f9fafb;
-  --border: #e5e7eb;
-  --code-bg: #f3f4f6;
-  --sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --text: #f3f4f6; /* text-gray-100 */
+  --text-h: #ffffff; /* white */
+  --bg: #0f172a; /* slate-900 */
+  --border: rgba(255, 255, 255, 0.2);
+  --code-bg: rgba(255, 255, 255, 0.1);
+  --sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Consolas, monospace;
 
   font-family: var(--sans);
@@ -19,10 +18,17 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--color-gray-50);
-  color: var(--color-gray-900);
+  background-color: #0f172a; /* Dark slate background */
+  color: #f3f4f6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  /* Premium radial gradients acting as 'orbs' */
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 40%),
+    radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(79, 70, 229, 0.1), transparent 50%);
+  background-attachment: fixed;
 }
 
 #root {
@@ -30,4 +36,19 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+/* Custom scrollbar for glassmorphism */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }

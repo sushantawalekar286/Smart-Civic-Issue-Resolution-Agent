@@ -1,35 +1,39 @@
 import React from 'react';
+import { MapPin, Map } from 'lucide-react';
 
 const ComplaintLocation = ({ location }) => {
   if (!location) {
-    return <div className="text-gray-500 italic text-sm">Location not provided.</div>;
+    return (
+      <div className="flex flex-col items-center justify-center py-8 text-indigo-300">
+        <MapPin className="w-8 h-8 opacity-50 mb-2" />
+        <p className="text-sm font-medium">Location not provided.</p>
+      </div>
+    );
   }
 
   const { latitude, longitude, address } = location;
 
   return (
-    <div className="bg-gray-50 rounded p-4 border border-gray-200">
+    <div className="bg-white/5 rounded-xl p-5 border border-white/10 backdrop-blur-sm">
       <div className="flex items-start">
-        <svg className="flex-shrink-0 h-5 w-5 text-indigo-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
+        <div className="flex-shrink-0 bg-indigo-500/20 p-2 rounded-lg mr-4">
+          <MapPin className="h-6 w-6 text-indigo-400" />
+        </div>
         <div>
           {address && (
-            <p className="text-sm font-medium text-gray-900 mb-1">{address}</p>
+            <p className="text-sm font-semibold text-white mb-2">{address}</p>
           )}
-          <p className="text-xs text-gray-500 font-mono bg-white inline-block px-2 py-1 rounded border border-gray-200">
-            {latitude.toFixed(6)}, {longitude.toFixed(6)}
-          </p>
+          <div className="text-xs text-indigo-300/80 font-mono bg-black/20 inline-block px-3 py-1.5 rounded-lg border border-white/5">
+            <span className="text-indigo-400">Lat:</span> {latitude.toFixed(6)}, <span className="text-indigo-400">Lng:</span> {longitude.toFixed(6)}
+          </div>
         </div>
       </div>
       
-      {/* Simple Map Placeholder - avoid complex GIS for hackathon MVP unless API keys are provided */}
-      <div className="mt-4 bg-gray-200 h-32 rounded flex items-center justify-center border border-gray-300">
-        <p className="text-sm text-gray-500 flex flex-col items-center">
-          <svg className="h-6 w-6 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-          </svg>
+      {/* Simple Map Placeholder */}
+      <div className="mt-5 bg-black/40 h-40 rounded-xl flex items-center justify-center border border-white/5 overflow-hidden relative group">
+        <div className="absolute inset-0 bg-indigo-900/20 group-hover:bg-indigo-900/40 transition-colors"></div>
+        <p className="text-sm text-indigo-300/60 flex flex-col items-center relative z-10 font-medium">
+          <Map className="h-8 w-8 text-indigo-400/50 mb-2 group-hover:scale-110 transition-transform duration-300" />
           Map View Disabled (No API Key)
         </p>
       </div>

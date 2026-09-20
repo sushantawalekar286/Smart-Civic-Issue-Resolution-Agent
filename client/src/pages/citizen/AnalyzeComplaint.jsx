@@ -8,6 +8,9 @@ import SeverityCard from '../../components/complaints/SeverityCard';
 import DepartmentCard from '../../components/complaints/DepartmentCard';
 import GeneratedComplaintCard from '../../components/complaints/GeneratedComplaintCard';
 import ComplaintReviewActions from '../../components/complaints/ComplaintReviewActions';
+import GlassCard from '../../components/ui/GlassCard';
+import GlassButton from '../../components/ui/GlassButton';
+import { AlertCircle, CheckCircle, ChevronLeft } from 'lucide-react';
 
 const AnalyzeComplaint = () => {
   const location = useLocation();
@@ -57,76 +60,80 @@ const AnalyzeComplaint = () => {
 
   if (error && !analysisData) {
     return (
-      <div className="max-w-3xl mx-auto p-6 text-center mt-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Oops!</h2>
-        <p className="text-red-600 mb-6">{error}</p>
-        <button
-          onClick={() => navigate('/citizen/report')}
-          className="text-indigo-600 font-medium hover:text-indigo-500"
-        >
-          Go back to Report Issue
-        </button>
+      <div className="max-w-3xl mx-auto p-6 text-center mt-12 animate-in fade-in duration-500">
+        <GlassCard className="p-12 flex flex-col items-center">
+          <div className="bg-rose-500/10 p-4 rounded-full mb-4">
+            <AlertCircle className="h-12 w-12 text-rose-400" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-4">Oops!</h2>
+          <p className="text-rose-300 mb-8 max-w-md">{error}</p>
+          <GlassButton onClick={() => navigate('/citizen/report')} variant="secondary" className="flex items-center gap-2">
+            <ChevronLeft className="w-4 h-4" /> Go back to Report Issue
+          </GlassButton>
+        </GlassCard>
       </div>
     );
   }
 
   if (success) {
     return (
-      <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow mt-8 border-t-4 border-green-500 text-center">
-        <svg className="mx-auto h-12 w-12 text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Complaint Submitted Successfully</h2>
-        <p className="text-lg text-gray-600 mb-6">Your civic issue has been recorded and routed.</p>
-        
-        <div className="bg-gray-50 rounded-lg p-6 max-w-md mx-auto text-left border border-gray-100 mb-8">
-          <div className="mb-2">
-            <span className="block text-sm font-medium text-gray-500">Complaint ID</span>
-            <span className="block text-lg font-bold text-gray-900">{success.complaintId}</span>
+      <div className="max-w-3xl mx-auto p-6 mt-8 text-center animate-in fade-in duration-500">
+        <GlassCard className="p-10 border-emerald-500/30">
+          <div className="bg-emerald-500/10 p-4 rounded-full mb-6 inline-block">
+            <CheckCircle className="h-16 w-16 text-emerald-400" />
           </div>
-          <div className="mb-2">
-            <span className="block text-sm font-medium text-gray-500">Status</span>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 uppercase">
-              {success.status}
-            </span>
+          <h2 className="text-3xl font-extrabold text-white mb-3">Complaint Submitted Successfully</h2>
+          <p className="text-lg text-emerald-200/80 mb-8">Your civic issue has been recorded and routed.</p>
+          
+          <div className="bg-black/30 rounded-xl p-6 max-w-md mx-auto text-left border border-white/10 mb-8 grid gap-4">
+            <div>
+              <span className="block text-sm font-medium text-gray-400 mb-1">Complaint ID</span>
+              <span className="block text-xl font-bold text-white tracking-wide">{success.complaintId}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="block text-sm font-medium text-gray-400 mb-1">Status</span>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider">
+                  {success.status}
+                </span>
+              </div>
+              <div>
+                <span className="block text-sm font-medium text-gray-400 mb-1">Routed Department</span>
+                <span className="block text-white font-medium">{success.department}</span>
+              </div>
+            </div>
           </div>
-          <div>
-            <span className="block text-sm font-medium text-gray-500">Routed Department</span>
-            <span className="block text-gray-900">{success.department}</span>
-          </div>
-        </div>
 
-        <button
-          onClick={() => navigate('/citizen/dashboard')}
-          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
-        >
-          View Dashboard
-        </button>
+          <GlassButton
+            onClick={() => navigate('/citizen/dashboard')}
+            variant="primary"
+            className="w-full sm:w-auto px-8"
+          >
+            View Dashboard
+          </GlassButton>
+        </GlassCard>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8 animate-in fade-in duration-500">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Review Analysis</h1>
-        <p className="mt-2 text-sm text-gray-600">
+        <h1 className="text-3xl font-bold text-white tracking-tight">Review Analysis</h1>
+        <p className="mt-2 text-lg text-indigo-200">
           Please review the AI analysis of your complaint before final submission.
         </p>
       </div>
 
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
-          <div className="flex">
-            <div className="ml-3">
-              <p className="text-sm text-red-700">{error}</p>
-            </div>
-          </div>
+        <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 flex items-start">
+          <AlertCircle className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
+          <p className="ml-3 text-sm text-rose-200 font-medium">{error}</p>
         </div>
       )}
 
       {analysisData && (
-        <>
+        <div className="space-y-6">
           <AIAnalysisCard 
             issueType={analysisData.issueType} 
             confidence={analysisData.classificationConfidence} 
@@ -146,11 +153,13 @@ const AnalyzeComplaint = () => {
             generatedComplaint={analysisData.generatedComplaint} 
           />
           
-          <ComplaintReviewActions 
-            onConfirm={handleConfirmSubmit} 
-            isSubmitting={isSubmitting} 
-          />
-        </>
+          <div className="pt-4">
+            <ComplaintReviewActions 
+              onConfirm={handleConfirmSubmit} 
+              isSubmitting={isSubmitting} 
+            />
+          </div>
+        </div>
       )}
     </div>
   );

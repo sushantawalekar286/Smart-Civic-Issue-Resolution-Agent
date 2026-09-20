@@ -1,26 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import GlassButton from '../components/ui/GlassButton';
+import GlassCard from '../components/ui/GlassCard';
 
 const NotFound = () => {
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <h1 className="text-9xl font-extrabold text-indigo-600 tracking-widest">404</h1>
-        <div className="bg-indigo-600 px-2 text-sm rounded rotate-12 absolute text-white shadow-sm -ml-4">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <GlassCard className="max-w-md w-full p-12 text-center relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px] -z-10"></div>
+        <h1 className="text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-indigo-400 to-cyan-400 tracking-widest drop-shadow-sm mb-4">404</h1>
+        <div className="inline-block bg-white/10 px-3 py-1 text-sm rounded-full border border-white/20 text-white shadow-sm mb-6 uppercase tracking-wider font-semibold">
           Page Not Found
         </div>
-        <p className="mt-8 text-xl text-gray-600">
+        <p className="text-lg text-gray-300 mb-8 leading-relaxed">
           Sorry, we couldn't find the page you're looking for.
         </p>
-        <div className="mt-10">
-          <Link
-            to="/"
-            className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Go Home
-          </Link>
-        </div>
-      </div>
+        <Link to="/" className="inline-block">
+          <GlassButton variant="primary" className="px-8">
+            Return Home
+          </GlassButton>
+        </Link>
+      </GlassCard>
     </div>
   );
 };

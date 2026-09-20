@@ -1,4 +1,6 @@
 import React, { useRef, useState } from 'react';
+import { UploadCloud, X, Image as ImageIcon } from 'lucide-react';
+import GlassButton from '../ui/GlassButton';
 
 const EvidenceUploader = ({ file, onFileSelect, onRemove, error }) => {
   const fileInputRef = useRef(null);
@@ -53,57 +55,63 @@ const EvidenceUploader = ({ file, onFileSelect, onRemove, error }) => {
 
   return (
     <div className="mb-6">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-sm font-medium text-gray-300 mb-2">
         Upload Evidence Photo
       </label>
       
       {!file ? (
         <div 
-          className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-lg transition-colors cursor-pointer ${isDragging ? 'border-indigo-500 bg-indigo-50' : 'border-gray-300 hover:border-gray-400'}`}
+          className={`mt-1 flex justify-center px-6 pt-8 pb-8 border-2 border-dashed rounded-xl transition-all cursor-pointer backdrop-blur-sm ${
+            isDragging 
+              ? 'border-indigo-400 bg-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.2)]' 
+              : 'border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30'
+          }`}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
           onDrop={onDrop}
           onClick={() => fileInputRef.current?.click()}
         >
-          <div className="space-y-1 text-center">
-            <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <div className="flex text-sm text-gray-600 justify-center">
-              <label className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500 bg-transparent">
-                <span>Upload a file</span>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept="image/jpeg, image/png, image/webp"
-                  className="sr-only"
-                />
-              </label>
-              <p className="pl-1">or drag and drop</p>
+          <div className="space-y-2 text-center">
+            <div className="bg-indigo-500/20 p-3 rounded-full w-fit mx-auto mb-4 border border-indigo-500/30">
+              <UploadCloud className="h-8 w-8 text-indigo-400" />
             </div>
-            <p className="text-xs text-gray-500">PNG, JPG, WEBP up to 5MB</p>
+            <div className="flex text-sm text-gray-300 justify-center gap-1">
+              <span className="font-semibold text-indigo-400 hover:text-indigo-300">Upload a file</span>
+              <p>or drag and drop</p>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/jpeg, image/png, image/webp"
+                className="sr-only"
+              />
+            </div>
+            <p className="text-xs text-gray-400 font-medium">PNG, JPG, WEBP up to 5MB</p>
           </div>
         </div>
       ) : (
-        <div className="mt-1 flex flex-col items-center p-4 border border-gray-200 rounded-lg bg-gray-50">
-          <div className="relative w-full max-w-md h-48 overflow-hidden rounded-md border border-gray-300 bg-white">
+        <div className="mt-1 flex flex-col items-center p-4 border border-white/20 rounded-xl bg-white/5 backdrop-blur-sm">
+          <div className="relative w-full max-w-md h-48 overflow-hidden rounded-lg bg-black/40">
             <img src={previewUrl} alt="Evidence Preview" className="w-full h-full object-contain" />
           </div>
-          <div className="mt-4 flex items-center justify-between w-full">
-            <span className="text-sm font-medium text-gray-900 truncate pr-4">{file.name}</span>
+          <div className="mt-4 flex items-center justify-between w-full bg-white/5 p-3 rounded-lg border border-white/10">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <ImageIcon className="w-5 h-5 text-indigo-400 shrink-0" />
+              <span className="text-sm font-medium text-gray-200 truncate pr-4">{file.name}</span>
+            </div>
             <button 
               type="button" 
               onClick={handleRemove} 
-              className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+              className="p-1.5 rounded-lg text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 transition-colors"
+              title="Remove image"
             >
-              Remove
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
       )}
       
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-rose-400 font-medium">{error}</p>}
     </div>
   );
 };

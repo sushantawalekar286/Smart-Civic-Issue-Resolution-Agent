@@ -6,9 +6,7 @@ import Register from '../pages/auth/Register';
 import CitizenLayout from '../layouts/CitizenLayout';
 import AnalyzeComplaint from '../pages/citizen/AnalyzeComplaint';
 import ReportIssue from '../pages/citizen/ReportIssue';
-import CitizenLayout from '../layouts/CitizenLayout';
-import AnalyzeComplaint from '../pages/citizen/AnalyzeComplaint';
-import ReportIssue from '../pages/citizen/ReportIssue';
+import Dashboard from '../pages/citizen/Dashboard';
 import MyComplaints from '../pages/citizen/MyComplaints';
 import ComplaintDetails from '../pages/citizen/ComplaintDetails';
 import AuthorityComplaintDetails from '../pages/authority/ComplaintDetails';
@@ -67,19 +65,6 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   return children;
 };
 
-// Citizen Placeholder Dashboard
-const CitizenDashboard = () => (
-  <div style={{ padding: '20px' }}>
-    <h2>Citizen Dashboard</h2>
-    <p><Link to="/citizen/report">Report a Civic Issue</Link></p>
-  </div>
-);
-const CitizenDashboard = () => (
-  <div style={{ padding: '20px' }}>
-    <h2>Citizen Dashboard</h2>
-    <p><Link to="/citizen/report">Report a Civic Issue</Link></p>
-  </div>
-);
 const AuthorityDashboard = () => <div><h2>Authority Dashboard</h2></div>;
 
 const AdminDashboard = () => <div><h2>Admin Dashboard</h2></div>;
@@ -95,7 +80,7 @@ const AppRoutes = () => {
           <CitizenLayout />
         </ProtectedRoute>
       }>
-        <Route path="dashboard" element={<CitizenDashboard />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="report" element={<ReportIssue />} />
         <Route path="analyze/:id" element={<AnalyzeComplaint />} />
         <Route path="complaints" element={<MyComplaints />} />
@@ -104,24 +89,6 @@ const AppRoutes = () => {
       </Route>
 
       <Route path="/admin/login" element={<AdminLogin />} />
-
-      <Route path="/citizen/dashboard" element={
-        <ProtectedRoute allowedRoles={['citizen', 'CITIZEN']}>
-          <CitizenDashboard />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/citizen/analyze/:id" element={
-        <ProtectedRoute allowedRoles={['citizen', 'CITIZEN']}>
-          <AnalyzeComplaint />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/citizen/report" element={
-        <ProtectedRoute allowedRoles={['citizen', 'CITIZEN']}>
-          <ReportIssue />
-        </ProtectedRoute>
-      } />
 
       {/* Authority routes */}
       <Route path="/authority/dashboard" element={
@@ -132,7 +99,6 @@ const AppRoutes = () => {
 
       <Route path="/authority/complaints/:complaintId" element={
         <ProtectedRoute allowedRoles={['authority', 'AUTHORITY']}>
-
           <AuthorityComplaintDetails />
         </ProtectedRoute>
       } />
@@ -170,47 +136,6 @@ const AppRoutes = () => {
       } />
       <Route path="/admin/departments" element={
         <ProtectedRoute allowedRoles={['admin', 'ADMIN']}>
-          <DepartmentsManagement />
-        </ProtectedRoute>
-      } />
-      <Route path="/admin/dashboard" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
-          <Dashboard />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/admin/complaints" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
-          <ComplaintsList />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/admin/complaints/:complaintId" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
-          <AdminComplaintDetails />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/admin/agent-actions" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
-          <AgentActionsList />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/admin/users" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
-          <UsersList />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/admin/authorities" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
-          <AuthoritiesManagement />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/admin/departments" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
           <DepartmentsManagement />
         </ProtectedRoute>
       } />

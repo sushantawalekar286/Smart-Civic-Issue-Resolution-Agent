@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { MapPin, Target, RefreshCw } from 'lucide-react';
+import GlassButton from '../ui/GlassButton';
 
 const LocationPicker = ({ location, onLocationSelect, error }) => {
   const [loading, setLoading] = useState(false);
@@ -32,39 +34,38 @@ const LocationPicker = ({ location, onLocationSelect, error }) => {
   return (
     <div className="mb-6">
       {!location ? (
-        <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 text-center">
-          <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <button 
-            type="button" 
+        <div className="bg-white/5 p-8 rounded-xl border border-white/20 text-center backdrop-blur-sm">
+          <div className="bg-indigo-500/20 p-3 rounded-full w-fit mx-auto mb-4 border border-indigo-500/30">
+            <MapPin className="h-8 w-8 text-indigo-400" />
+          </div>
+          <p className="text-gray-300 mb-6 max-w-sm mx-auto">We need your location to accurately route this issue to the responsible department.</p>
+          <GlassButton 
             onClick={handleGetLocation} 
-            disabled={loading} 
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
+            loading={loading}
+            className="flex items-center gap-2 mx-auto"
           >
+            <Target className="w-4 h-4" />
             {loading ? 'Locating...' : 'Use Current Location'}
-          </button>
+          </GlassButton>
         </div>
       ) : (
-        <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-5 flex items-start">
-          <div className="flex-shrink-0 mt-0.5">
-            <svg className="h-5 w-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-            </svg>
+        <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-5 flex items-start backdrop-blur-sm">
+          <div className="flex-shrink-0 bg-indigo-500/20 p-2 rounded-lg">
+            <MapPin className="h-6 w-6 text-indigo-400" />
           </div>
-          <div className="ml-3 w-full">
-            <h4 className="text-sm font-medium text-indigo-900">Location captured</h4>
-            <div className="mt-2 text-sm text-indigo-700">
-              <p>Latitude: <span className="font-mono">{location.latitude.toFixed(6)}</span></p>
-              <p>Longitude: <span className="font-mono">{location.longitude.toFixed(6)}</span></p>
+          <div className="ml-4 w-full">
+            <h4 className="text-base font-semibold text-indigo-200 tracking-tight">Location captured</h4>
+            <div className="mt-2 text-sm text-indigo-300/80 bg-black/20 p-3 rounded-lg font-mono inline-block">
+              <p>Lat: <span className="text-white">{location.latitude.toFixed(6)}</span></p>
+              <p>Lng: <span className="text-white">{location.longitude.toFixed(6)}</span></p>
             </div>
             <div className="mt-4">
               <button 
                 type="button" 
                 onClick={handleGetLocation} 
-                className="inline-flex items-center text-sm font-medium text-indigo-700 hover:text-indigo-600 focus:outline-none"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-indigo-400 hover:text-indigo-300 focus:outline-none transition-colors"
               >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                 Update Location
               </button>
             </div>
@@ -73,7 +74,7 @@ const LocationPicker = ({ location, onLocationSelect, error }) => {
       )}
       
       {(error || localError) && (
-        <p className="mt-2 text-sm text-red-600">{error || localError}</p>
+        <p className="mt-2 text-sm text-rose-400 font-medium">{error || localError}</p>
       )}
     </div>
   );

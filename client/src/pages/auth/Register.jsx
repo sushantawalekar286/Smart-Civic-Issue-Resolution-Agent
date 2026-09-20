@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { ShieldAlert, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import GlassCard from '../../components/ui/GlassCard';
+import GlassInput from '../../components/ui/GlassInput';
+import GlassButton from '../../components/ui/GlassButton';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -47,237 +51,184 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
-      {/* LEFT: Branding / Visual (Hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-indigo-600 flex-col justify-center px-12 xl:px-24 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-           <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="currentColor">
-              <polygon points="0,100 100,0 100,100" />
-           </svg>
-        </div>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="max-w-5xl w-full grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
         
-        <div className="relative z-10">
-          <div className="mb-12">
-            <svg className="h-16 w-auto text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
+        {/* LEFT: Branding / Visual */}
+        <div className="hidden lg:flex flex-col justify-center space-y-8">
+          <div className="bg-indigo-500/20 p-4 rounded-2xl w-fit border border-indigo-500/30 backdrop-blur-md">
+            <ShieldAlert className="w-12 h-12 text-indigo-400" />
           </div>
-          <h1 className="text-4xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-5xl font-extrabold text-white tracking-tight leading-tight">
             Join the Smart Civic Platform
           </h1>
-          <p className="text-indigo-100 text-lg mb-8 leading-relaxed">
+          <p className="text-indigo-200 text-lg leading-relaxed max-w-md">
             Create a citizen account to report issues, track their progress, and improve your local community.
           </p>
-          <div className="space-y-4">
-            <div className="flex items-center text-indigo-100 text-sm font-medium">
-              <div className="flex items-center justify-center h-8 w-8 rounded-full bg-indigo-500 text-white mr-3">
-                 1
-              </div>
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center text-indigo-100 font-medium bg-white/5 p-3 rounded-xl border border-white/10 w-fit backdrop-blur-sm">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-500 text-white text-xs mr-3">1</span>
               Create an Account
             </div>
-            <div className="flex items-center text-indigo-100 text-sm font-medium">
-              <div className="flex items-center justify-center h-8 w-8 rounded-full bg-indigo-500 text-white mr-3">
-                 2
-              </div>
+            <div className="flex items-center text-indigo-100 font-medium bg-white/5 p-3 rounded-xl border border-white/10 w-fit backdrop-blur-sm">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-500 text-white text-xs mr-3">2</span>
               Submit Issue Reports with Evidence
             </div>
-            <div className="flex items-center text-indigo-100 text-sm font-medium">
-              <div className="flex items-center justify-center h-8 w-8 rounded-full bg-indigo-500 text-white mr-3">
-                 3
-              </div>
+            <div className="flex items-center text-indigo-100 font-medium bg-white/5 p-3 rounded-xl border border-white/10 w-fit backdrop-blur-sm">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-500 text-white text-xs mr-3">3</span>
               Track AI-assigned Department Responses
             </div>
           </div>
         </div>
-      </div>
 
-      {/* RIGHT: Register Card */}
-      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-gray-50 lg:bg-white overflow-y-auto">
-        <div className="mx-auto w-full max-w-md lg:w-[28rem]">
-          <div className="lg:hidden flex justify-center mb-6">
-             <svg className="h-12 w-auto text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-             </svg>
-          </div>
-          <div>
-            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight text-center lg:text-left">
-              Citizen Registration
-            </h2>
-            <p className="mt-2 text-sm text-gray-600 text-center lg:text-left">
-              Join to report issues in your neighborhood
-            </p>
+        {/* RIGHT: Register Card */}
+        <div className="w-full max-w-md mx-auto lg:max-w-none">
+          <div className="lg:hidden flex flex-col items-center mb-8">
+            <div className="bg-indigo-500/20 p-3 rounded-xl border border-indigo-500/30 mb-4">
+              <ShieldAlert className="w-8 h-8 text-indigo-400" />
+            </div>
+            <h1 className="text-2xl font-bold text-white text-center tracking-tight">Citizen Registration</h1>
           </div>
 
-          <div className="mt-8">
-            <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 lg:shadow-none lg:bg-transparent lg:px-0 lg:py-0">
-              {error && (
-                <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="ml-3">
-                      <p className="text-sm text-red-700 font-medium">{error}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+          <GlassCard className="p-8">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-white tracking-tight">
+                Create an account
+              </h2>
+              <p className="mt-2 text-indigo-200/70">
+                Join to report issues in your neighborhood
+              </p>
+            </div>
 
-              <form className="space-y-5" onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                      First Name
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        id="firstName"
-                        name="firstName"
-                        type="text"
-                        required
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                      Last Name
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        id="lastName"
-                        name="lastName"
-                        type="text"
-                        required
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
-                      />
-                    </div>
-                  </div>
-                </div>
+            {error && (
+              <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 mb-6 flex items-start">
+                <AlertCircle className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
+                <p className="ml-3 text-sm text-rose-200 font-medium">{error}</p>
+              </div>
+            )}
 
+            <form className="space-y-5" onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email address
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-1.5">
+                    First Name
                   </label>
-                  <div className="mt-1">
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
-                    />
-                  </div>
+                  <GlassInput
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    required
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="John"
+                  />
                 </div>
-
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                    Password
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-1.5">
+                    Last Name
                   </label>
-                  <div className="mt-1 relative rounded-lg shadow-sm">
-                    <input
-                      id="password"
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="new-password"
-                      required
-                      value={formData.password}
-                      onChange={handleChange}
-                      className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
-                    />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                      <button
-                        type="button"
-                        className="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-indigo-500 transition-colors text-sm font-medium"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? 'Hide' : 'Show'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                    Confirm Password
-                  </label>
-                  <div className="mt-1 relative rounded-lg shadow-sm">
-                    <input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      autoComplete="new-password"
-                      required
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
-                    />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                      <button
-                        type="button"
-                        className="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-indigo-500 transition-colors text-sm font-medium"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      >
-                        {showConfirmPassword ? 'Hide' : 'Show'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed transition-all"
-                  >
-                    {loading ? (
-                      <span className="flex items-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Creating account...
-                      </span>
-                    ) : (
-                      'Register as Citizen'
-                    )}
-                  </button>
-                </div>
-              </form>
-
-              <div className="mt-6">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-gray-50 lg:bg-white text-gray-500">
-                      Already have an account?
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-6 text-center">
-                  <Link
-                    to="/login"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors"
-                  >
-                    Log in instead
-                  </Link>
+                  <GlassInput
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    required
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Doe"
+                  />
                 </div>
               </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1.5">
+                  Email address
+                </label>
+                <GlassInput
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="you@example.com"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1.5">
+                  Password
+                </label>
+                <div className="relative">
+                  <GlassInput
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                  />
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <button
+                      type="button"
+                      className="text-gray-400 hover:text-white focus:outline-none transition-colors"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-1.5">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <GlassInput
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    required
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                  />
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <button
+                      type="button"
+                      className="text-gray-400 hover:text-white focus:outline-none transition-colors"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <GlassButton
+                  type="submit"
+                  loading={loading}
+                  className="w-full"
+                >
+                  {loading ? 'Creating account...' : 'Register as Citizen'}
+                </GlassButton>
+              </div>
+            </form>
+
+            <div className="mt-8 pt-6 border-t border-white/10 text-center">
+              <p className="text-gray-400 text-sm">
+                Already have an account?{' '}
+                <Link to="/login" className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
+                  Log in instead
+                </Link>
+              </p>
             </div>
-          </div>
+          </GlassCard>
         </div>
       </div>
     </div>

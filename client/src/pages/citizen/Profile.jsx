@@ -1,7 +1,9 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import PageHeader from '../../components/common/PageHeader';
+import GlassCard from '../../components/ui/GlassCard';
+import GlassButton from '../../components/ui/GlassButton';
+import { User, Mail, Shield, LogOut } from 'lucide-react';
 
 const Profile = () => {
   const { user, logout } = useAuth();
@@ -19,46 +21,61 @@ const Profile = () => {
   if (!user) return null;
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <PageHeader 
-        title="My Profile" 
-        description="View your citizen account details." 
-      />
+    <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in duration-500">
+      <div>
+        <h1 className="text-3xl font-bold text-white tracking-tight">My Profile</h1>
+        <p className="mt-2 text-indigo-200">
+          View your citizen account details.
+        </p>
+      </div>
 
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-6">
-        <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Account Information</h3>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">Personal details and account settings.</p>
+      <GlassCard className="overflow-hidden">
+        <div className="px-6 py-5 border-b border-white/10 flex items-center gap-2">
+          <User className="w-5 h-5 text-indigo-400" />
+          <div>
+            <h3 className="text-lg font-bold text-white">Account Information</h3>
+            <p className="text-sm text-gray-400 mt-1">Personal details and account settings.</p>
+          </div>
         </div>
-        <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-          <dl className="sm:divide-y sm:divide-gray-200">
-            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Full name</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{user.name}</dd>
+        
+        <div className="p-6">
+          <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-400 flex items-center gap-2 mb-1">
+                <User className="w-4 h-4 text-gray-500" /> Full name
+              </dt>
+              <dd className="text-base font-semibold text-white">{user.name}</dd>
             </div>
-            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Email address</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{user.email}</dd>
+            
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-400 flex items-center gap-2 mb-1">
+                <Mail className="w-4 h-4 text-gray-500" /> Email address
+              </dt>
+              <dd className="text-base font-semibold text-white">{user.email}</dd>
             </div>
-            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Account Role</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 capitalize">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            
+            <div className="sm:col-span-2">
+              <dt className="text-sm font-medium text-gray-400 flex items-center gap-2 mb-2">
+                <Shield className="w-4 h-4 text-gray-500" /> Account Role
+              </dt>
+              <dd className="text-sm capitalize">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border border-emerald-500/30 bg-emerald-500/20 text-emerald-300 tracking-wider">
                   {user.role}
                 </span>
               </dd>
             </div>
           </dl>
         </div>
-      </div>
+      </GlassCard>
 
-      <div className="mt-8 flex justify-end">
-        <button
+      <div className="flex justify-end">
+        <GlassButton
           onClick={handleLogout}
-          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          className="flex items-center gap-2 border-rose-500/50 bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 hover:border-rose-400"
         >
+          <LogOut className="w-4 h-4" />
           Logout
-        </button>
+        </GlassButton>
       </div>
     </div>
   );

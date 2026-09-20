@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import PageHeader from '../../components/common/PageHeader';
-import StatusBadge from '../../components/common/StatusBadge';
-import SeverityBadge from '../../components/common/SeverityBadge';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import ErrorMessage from '../../components/common/ErrorMessage';
+import StatusBadge from '../../components/complaints/StatusBadge';
+import SeverityBadge from '../../components/complaints/SeverityBadge';
+import GlassCard from '../../components/ui/GlassCard';
 import ComplaintStatusTimeline from '../../components/complaints/ComplaintStatusTimeline';
 import ComplaintEvidence from '../../components/complaints/ComplaintEvidence';
 import ComplaintLocation from '../../components/complaints/ComplaintLocation';
 import { complaintAPI } from '../../services/complaint.service';
+import { ChevronLeft, FileText, Image as ImageIcon, MapPin, BrainCircuit, Activity, AlertCircle } from 'lucide-react';
 
 const ComplaintDetails = () => {
   const { complaintId } = useParams();
@@ -38,109 +37,173 @@ const ComplaintDetails = () => {
     }
   };
 
-  if (loading) return <LoadingSpinner text="Loading complaint details..." />;
+  if (loading) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
+        <p className="mt-4 text-indigo-200">Loading complaint details...</p>
+      </div>
+    );
+  }
   
   if (error || !complaint) {
     return (
-      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <ErrorMessage message={error} />
-        <Link to="/citizen/complaints" className="text-indigo-600 hover:text-indigo-900 font-medium">
-          &larr; Back to My Complaints
+      <div className="max-w-4xl mx-auto py-8 animate-in fade-in duration-500">
+        <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 flex items-start mb-6">
+          <AlertCircle className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
+          <p className="ml-3 text-sm text-rose-200 font-medium">{error}</p>
+        </div>
+        <Link 
+          to="/citizen/complaints" 
+          className="inline-flex items-center text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
+        >
+          <ChevronLeft className="w-5 h-5 mr-1" />
+          Back to My Complaints
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500 pb-12">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div>
-          <Link to="/citizen/complaints" className="text-sm text-indigo-600 hover:text-indigo-900 font-medium flex items-center mb-2">
-            <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
+          <Link 
+            to="/citizen/complaints" 
+            className="inline-flex items-center text-sm text-indigo-400 hover:text-indigo-300 font-medium mb-4 transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" />
             Back to Complaints
           </Link>
-          <PageHeader 
-            title={`Complaint ${complaint.complaintId || ''}`} 
-            description={`Submitted on ${new Date(complaint.createdAt || Date.now()).toLocaleDateString()}`} 
-          />
+          <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-2">
+            Complaint #{complaint.complaintId || ''}
+          </h1>
+          <p className="text-indigo-200 mt-2 text-lg">
+            Submitted on {new Date(complaint.createdAt || Date.now()).toLocaleDateString()}
+          </p>
         </div>
-        <div className="mt-4 sm:mt-0 flex gap-2">
+        <div className="flex flex-wrap items-center gap-3 mt-2 md:mt-0">
           <SeverityBadge severity={complaint.severity} />
           <StatusBadge status={complaint.status} />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Info */}
-        <div className="md:col-span-2 space-y-6">
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Issue Description</h3>
+        <div className="lg:col-span-2 space-y-6">
+          <GlassCard className="overflow-hidden">
+            <div className="px-6 py-4 border-b border-white/10 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-indigo-400" />
+              <h3 className="text-lg font-semibold text-white">Issue Description</h3>
             </div>
-            <div className="px-4 py-5 sm:p-6 text-gray-700 whitespace-pre-wrap">
+            <div className="px-6 py-6 text-gray-300 whitespace-pre-wrap leading-relaxed text-[15px]">
               {complaint.description || complaint.issueType || 'No description provided.'}
             </div>
-            <div className="bg-gray-50 px-4 py-4 sm:px-6 border-t border-gray-200 grid grid-cols-2 gap-4">
+            <div className="bg-white/5 px-6 py-4 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <span className="block text-sm font-medium text-gray-500">Issue Type</span>
-                <span className="block text-sm text-gray-900">{complaint.issueType}</span>
+                <span className="block text-sm font-medium text-gray-400 mb-1">Issue Type</span>
+                <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                  {complaint.issueType}
+                </span>
               </div>
               <div>
-                <span className="block text-sm font-medium text-gray-500">Department</span>
-                <span className="block text-sm text-gray-900">{complaint.department}</span>
+                <span className="block text-sm font-medium text-gray-400 mb-1">Department</span>
+                <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-slate-800 text-gray-300 border border-white/10">
+                  {complaint.department}
+                </span>
               </div>
             </div>
-          </div>
+          </GlassCard>
 
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Evidence</h3>
+          <GlassCard className="overflow-hidden">
+            <div className="px-6 py-4 border-b border-white/10 flex items-center gap-2">
+              <ImageIcon className="w-5 h-5 text-indigo-400" />
+              <h3 className="text-lg font-semibold text-white">Evidence</h3>
             </div>
-            <div className="px-4 py-5 sm:p-6">
+            <div className="p-6">
               <ComplaintEvidence evidence={complaint.evidence} />
             </div>
-          </div>
+          </GlassCard>
 
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Location</h3>
+          <GlassCard className="overflow-hidden">
+            <div className="px-6 py-4 border-b border-white/10 flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-indigo-400" />
+              <h3 className="text-lg font-semibold text-white">Location</h3>
             </div>
-            <div className="px-4 py-5 sm:p-6">
+            <div className="p-6">
               <ComplaintLocation location={complaint.location} />
             </div>
-          </div>
+          </GlassCard>
           
           {complaint.aiAnalysis && (
-            <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-              <div className="px-4 py-5 sm:px-6 border-b border-gray-200 bg-indigo-50">
-                <h3 className="text-lg leading-6 font-medium text-indigo-900 flex items-center">
-                  <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  AI Assessment Summary
-                </h3>
+            <GlassCard className="overflow-hidden border-indigo-500/30">
+              <div className="px-6 py-4 border-b border-indigo-500/20 bg-indigo-500/10 flex items-center gap-2">
+                <BrainCircuit className="w-5 h-5 text-indigo-400" />
+                <h3 className="text-lg font-semibold text-indigo-200">AI Assessment Summary</h3>
               </div>
-              <div className="px-4 py-5 sm:p-6 text-sm text-gray-700">
-                <p><strong>Confidence:</strong> {complaint.aiAnalysis.classificationConfidence}</p>
-                <p className="mt-2"><strong>Severity Reason:</strong> {complaint.aiAnalysis.severityReason}</p>
-                <p className="mt-2"><strong>Department Reason:</strong> {complaint.aiAnalysis.departmentReason}</p>
+              <div className="px-6 py-6 text-sm text-gray-300 space-y-4">
+                <div className="flex items-start">
+                  <div className="w-32 flex-shrink-0 font-medium text-gray-400">Confidence:</div>
+                  <div className="font-mono text-indigo-300">{complaint.aiAnalysis.classificationConfidence}</div>
+                </div>
+                <div className="flex items-start">
+                  <div className="w-32 flex-shrink-0 font-medium text-gray-400">Severity Reason:</div>
+                  <div>{complaint.aiAnalysis.severityReason}</div>
+                </div>
+                <div className="flex items-start">
+                  <div className="w-32 flex-shrink-0 font-medium text-gray-400">Dept. Reason:</div>
+                  <div>{complaint.aiAnalysis.departmentReason}</div>
+                </div>
               </div>
-            </div>
+            </GlassCard>
           )}
         </div>
 
         {/* Sidebar Info */}
         <div className="space-y-6">
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Status Timeline</h3>
+          {complaint.escalation?.isEscalated && (
+            <GlassCard className="overflow-hidden border-rose-500/30">
+              <div className="px-6 py-4 border-b border-rose-500/20 bg-rose-500/10 flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-rose-400" />
+                <h3 className="text-lg font-semibold text-rose-200">Escalated</h3>
+              </div>
+              <div className="p-6 text-sm text-gray-300">
+                <p className="mb-2"><span className="font-semibold text-rose-300">Level:</span> {complaint.escalation.level}</p>
+                <p className="mb-2"><span className="font-semibold text-rose-300">Reason:</span> {complaint.escalation.reason || 'SLA breached'}</p>
+                {complaint.escalation.escalatedAt && (
+                  <p><span className="font-semibold text-rose-300">Date:</span> {new Date(complaint.escalation.escalatedAt).toLocaleDateString()}</p>
+                )}
+              </div>
+            </GlassCard>
+          )}
+
+          {complaint.followUp?.count > 0 && (
+            <GlassCard className="overflow-hidden border-amber-500/30">
+              <div className="px-6 py-4 border-b border-amber-500/20 bg-amber-500/10 flex items-center gap-2">
+                <Activity className="w-5 h-5 text-amber-400" />
+                <h3 className="text-lg font-semibold text-amber-200">Agent Follow-ups</h3>
+              </div>
+              <div className="p-6 text-sm text-gray-300">
+                <p className="mb-2"><span className="font-semibold text-amber-300">Total Follow-ups:</span> {complaint.followUp.count}</p>
+                {complaint.followUp.lastReason && (
+                  <p className="mb-2"><span className="font-semibold text-amber-300">Latest Reason:</span> {complaint.followUp.lastReason}</p>
+                )}
+                {complaint.followUp.lastTriggeredAt && (
+                  <p><span className="font-semibold text-amber-300">Last Triggered:</span> {new Date(complaint.followUp.lastTriggeredAt).toLocaleDateString()}</p>
+                )}
+              </div>
+            </GlassCard>
+          )}
+
+          <GlassCard className="overflow-hidden">
+            <div className="px-6 py-4 border-b border-white/10 flex items-center gap-2">
+              <Activity className="w-5 h-5 text-indigo-400" />
+              <h3 className="text-lg font-semibold text-white">Status Timeline</h3>
             </div>
-            <div className="px-4 py-5 sm:p-6">
+            <div className="p-6">
               <ComplaintStatusTimeline statusHistory={complaint.statusHistory} />
             </div>
-          </div>
+          </GlassCard>
         </div>
       </div>
     </div>
