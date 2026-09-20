@@ -73,9 +73,12 @@ Output JSON schema:
 Complaint Description: "${description}"
 Evidence: ${evidence.length > 0 ? `${evidence.length} evidence item(s)` : 'No image'}`;
 
+  const imageParts = await geminiClient.prepareImageParts(evidence);
+
   const result = await geminiClient.generateStructuredJson({
     prompt,
     systemInstruction,
+    imageParts,
     fallbackData: fallback
   });
 

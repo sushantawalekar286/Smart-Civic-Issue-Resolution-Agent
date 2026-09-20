@@ -1,4 +1,5 @@
-const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Gemini Client
@@ -7,16 +8,138 @@ const https = require('https');
  */
 class GeminiClient {
   constructor() {
-    this.apiKey = process.env.GEMINI_API_KEY || '';
-    this.model = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
     this.apiBaseUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
+    this.lastProvider = 'FALLBACK';
   }
 
   /**
-   * Check if Gemini API key is configured
+   * Dynamically fetch API key from process environment
+   */
+  get apiKey() {
+    return (process.env.GEMINI_API_KEY || '').trim();
+  }
+
+  /**
+   * Dynamically fetch model from process environment
+   */
+  get model() {
+    return (process.env.GEMINI_MODEL || 'gemini-1.5-flash').trim();
+  }
+
+  /**
+   * Check if Gemini API key is configured with a valid non-placeholder value
    */
   isConfigured() {
-    return Boolean(this.apiKey && this.apiKey.trim().length > 0 && this.apiKey !== 'your_gemini_api_key');
+    const key = this.apiKey;
+    return Boolean(
+      key &&
+      key.length > 10 &&
+      key !== 'your_gemini_api_key' &&
+      key !== 'YOUR_GEMINI_API_KEY'
+    );
+  }
+
+  /**
+   * Get the provider used in the most recent analysis operation ('GEMINI' or 'FALLBACK')
+   */
+  getLastUsedProvider() {
+    return this.lastProvider;
+  }
+
+  /**
+   * Convert evidence items (local path or remote URL) to Gemini inlineData parts
+   * @param {Array} evidence
+   * @returns {Promise<Array>} [{ mimeType, data }]
+   */
+  async prepareImageParts(evidence = []) {
+    const imageParts = [];
+    if (!Array.isArray(evidence) || evidence.length === 0) {
+      return imageParts;
+    }
+
+    const imageItems = evidence.filter(e => e && (e.type === 'image' || e.mimetype?.startsWith('image/') || e.mimeType?.startsWith('image/')));
+
+    for (const item of imageItems) {
+      try {
+        const mimeType = item.mimeType || item.mimetype || 'image/jpeg';
+
+        // 1. Try direct buffer
+        if (item.buffer && Buffer.isBuffer(item.buffer)) {
+          imageParts.push({
+            inlineData: {
+              mimeType,
+              data: item.buffer.toString('base64')
+            }
+          });
+          continue;
+        }
+
+        // 2. Try local file path if available
+        const localPath = item.filePath || item.path;
+        if (localPath && fs.existsSync(localPath)) {
+          const buffer = fs.readFileSync(localPath);
+          imageParts.push({
+            inlineData: {
+              mimeType,
+              data: buffer.toString('base64')
+            }
+          });
+          continue;
+        }
+
+        // 3. Try fetching from remote URL (e.g. Cloudinary)
+        if (item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'))) {
+          const res = await fetch(item.url);
+          if (res.ok) {
+            const arrayBuffer = await res.arrayBuffer();
+            imageParts.push({
+              inlineData: {
+                mimeType: res.headers.get('content-type') || mimeType,
+                data: Buffer.from(arrayBuffer).toString('base64')
+              }
+            });
+            continue;
+          }
+        }
+      } catch (err) {
+        // Safe logging of image preparation issue without crashing
+        console.warn(`[GEMINI_IMAGE_PREP_WARNING] Could not convert evidence item to inline data: ${err.message}`);
+      }
+    }
+
+    return imageParts;
+  }
+
+  /**
+   * Safely extract and parse JSON from Gemini text output
+   * Handles markdown code fences (```json ... ```) and surrounding commentary.
+   * @param {string} rawText
+   * @returns {Object}
+   */
+  extractJson(rawText) {
+    if (!rawText || typeof rawText !== 'string') {
+      throw new Error('No text content returned from Gemini model.');
+    }
+
+    let cleaned = rawText.trim();
+
+    // Strip markdown code fences if present
+    if (cleaned.startsWith('```')) {
+      cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+    }
+
+    try {
+      return JSON.parse(cleaned);
+    } catch (parseErr) {
+      // Look for the first outer JSON object {...}
+      const firstBrace = cleaned.indexOf('{');
+      const lastBrace = cleaned.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        const candidate = cleaned.substring(firstBrace, lastBrace + 1);
+        return JSON.parse(candidate);
+      }
+      throw new Error(`Failed to parse Gemini output as JSON: ${parseErr.message}`);
+    }
   }
 
   /**
@@ -30,21 +153,31 @@ class GeminiClient {
    */
   async generateStructuredJson({ prompt, systemInstruction = '', imageParts = [], fallbackData = null }) {
     if (!this.isConfigured()) {
+      this.lastProvider = 'FALLBACK';
       if (fallbackData !== null) {
         return fallbackData;
       }
       throw new Error('GEMINI_API_KEY is not configured in environment variables.');
     }
 
-    const endpoint = `${this.apiBaseUrl}/${this.model}:generateContent?key=${encodeURIComponent(this.apiKey)}`;
+    const modelsToTry = [
+      this.model,
+      'gemini-1.5-flash',
+      'gemini-2.0-flash',
+      'gemini-1.5-pro'
+    ];
+    // De-duplicate model list
+    const candidateModels = [...new Set(modelsToTry)];
 
     const contents = [];
     const parts = [];
 
-    // Add image parts if provided
+    // Add inline image parts if provided
     if (Array.isArray(imageParts) && imageParts.length > 0) {
       for (const img of imageParts) {
-        if (img && img.mimeType && img.data) {
+        if (img && img.inlineData) {
+          parts.push(img);
+        } else if (img && img.mimeType && img.data) {
           parts.push({
             inlineData: {
               mimeType: img.mimeType,
@@ -73,34 +206,55 @@ class GeminiClient {
       };
     }
 
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
+    let lastError = null;
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Gemini API error [${response.status}]: ${errorText}`);
+    // Attempt candidate models
+    for (const currentModel of candidateModels) {
+      const endpoint = `${this.apiBaseUrl}/${currentModel}:generateContent?key=${encodeURIComponent(this.apiKey)}`;
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          // If model is not found (404), try the next candidate model
+          if (response.status === 404 && candidateModels.indexOf(currentModel) < candidateModels.length - 1) {
+            console.warn(`[GEMINI_MODEL_RETRY] Model "${currentModel}" returned 404. Attempting alternative model...`);
+            lastError = new Error(`Gemini API error [${response.status}]: ${errorText}`);
+            continue;
+          }
+          throw new Error(`Gemini API error [${response.status}]: ${errorText}`);
+        }
+
+        const data = await response.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        const parsedJson = this.extractJson(rawText);
+        this.lastProvider = 'GEMINI';
+        return parsedJson;
+      } catch (err) {
+        lastError = err;
+        // If this wasn't a 404 model issue, break to avoid useless iterations on invalid key / rate limit
+        if (!err.message.includes('[404]')) {
+          break;
+        }
       }
-
-      const data = await response.json();
-      const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (!rawText) {
-        throw new Error('No content returned from Gemini model.');
-      }
-
-      return JSON.parse(rawText.trim());
-    } catch (err) {
-      if (fallbackData !== null) {
-        return fallbackData;
-      }
-      throw err;
     }
+
+    // If Gemini execution failed and fallbackData was provided, revert gracefully
+    if (fallbackData !== null) {
+      console.warn(`[GEMINI_FALLBACK_TRIGGERED] Live Gemini request failed (${lastError?.message || 'unknown error'}). Using deterministic fallback.`);
+      this.lastProvider = 'FALLBACK';
+      return fallbackData;
+    }
+
+    throw lastError || new Error('Gemini API generation request failed.');
   }
 }
 

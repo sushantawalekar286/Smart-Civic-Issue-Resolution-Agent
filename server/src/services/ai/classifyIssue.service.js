@@ -123,9 +123,12 @@ Rules:
 Description: "${description}"
 Evidence items: ${evidence.length} provided.`;
 
+  const imageParts = await geminiClient.prepareImageParts(evidence);
+
   const result = await geminiClient.generateStructuredJson({
     prompt,
     systemInstruction,
+    imageParts,
     fallbackData: fallback
   });
 

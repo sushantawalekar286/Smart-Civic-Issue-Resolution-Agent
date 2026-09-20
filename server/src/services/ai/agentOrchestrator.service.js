@@ -30,20 +30,25 @@ class AgentOrchestratorService {
     const location = input.location || {};
     const evidence = Array.isArray(input.evidence) ? input.evidence : [];
 
+    console.log('AI_ANALYSIS_STARTED');
+
     // Stage 1: Issue Classification
     const classificationResult = await classifyIssue({
       description,
       evidence
     });
+    console.log('ISSUE_CLASSIFICATION_COMPLETED');
 
     // Stage 2: Evidence Analysis
     const evidenceResult = await analyzeEvidence({
       description,
       evidence
     });
+    console.log('EVIDENCE_ANALYSIS_COMPLETED');
 
     // Stage 3: Location Analysis
     const locationResult = analyzeLocation(location);
+    console.log('LOCATION_ANALYSIS_COMPLETED');
 
     // Stage 4: Severity Assessment
     const severityResult = await assessSeverity({
@@ -51,12 +56,14 @@ class AgentOrchestratorService {
       issueType: classificationResult.issueType,
       evidence
     });
+    console.log('SEVERITY_ASSESSMENT_COMPLETED');
 
     // Stage 5: Department Mapping
     const departmentResult = await mapDepartment({
       issueType: classificationResult.issueType,
       description
     });
+    console.log('DEPARTMENT_MAPPING_COMPLETED');
 
     // Stage 6: Structured Complaint Generation
     const generatedComplaintText = await generateComplaint({
@@ -66,6 +73,7 @@ class AgentOrchestratorService {
       description,
       department: departmentResult
     });
+    console.log('COMPLAINT_GENERATION_COMPLETED');
 
     // Final AI Output Contract Assembly
     const aiOutput = {
@@ -100,6 +108,7 @@ class AgentOrchestratorService {
       throw validationError;
     }
 
+    console.log('AI_ANALYSIS_COMPLETED');
     return aiOutput;
   }
 }

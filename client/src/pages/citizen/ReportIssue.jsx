@@ -11,7 +11,7 @@ const ReportIssue = () => {
     // Navigate to the analysis review page, passing the payload in state
     navigate('/citizen/analyze/new', {
       state: {
-        analysisData: payload.analysisData,
+        analysisData: payload.analysisData || payload.aiAnalysis,
         analysisToken: payload.analysisToken
       }
     });

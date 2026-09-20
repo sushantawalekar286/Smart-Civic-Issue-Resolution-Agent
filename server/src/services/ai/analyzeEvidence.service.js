@@ -63,9 +63,12 @@ CRITICAL GROUNDING RULES:
   const prompt = `Complaint Description: "${description}"
 Attached Evidence: ${hasImage ? `${images.length} image(s) provided: ${images.map(img => img.fileName || img.url).join(', ')}` : 'None. No image attached.'}`;
 
+  const imageParts = await geminiClient.prepareImageParts(evidence);
+
   const result = await geminiClient.generateStructuredJson({
     prompt,
     systemInstruction,
+    imageParts,
     fallbackData: fallback
   });
 

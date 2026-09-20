@@ -64,9 +64,9 @@ const ComplaintForm = ({ onAnalyzed }) => {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
         {submitError && (
-          <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 flex items-start">
-            <AlertCircle className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
-            <p className="ml-3 text-sm text-rose-200 font-medium">{submitError}</p>
+          <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-start">
+            <AlertCircle className="w-5 h-5 text-rose-600 mt-0.5 shrink-0" />
+            <p className="ml-3 text-sm text-rose-700 font-medium">{submitError}</p>
           </div>
         )}
         <InputSummary 

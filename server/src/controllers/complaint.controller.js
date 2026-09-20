@@ -26,7 +26,8 @@ exports.analyzeIntake = async (req, res, next) => {
         type: 'image',
         url: uploadResult.url,
         fileName: req.file.originalname,
-        mimeType: req.file.mimetype
+        mimeType: req.file.mimetype,
+        filePath: req.file.path
       });
       inputMethod = 'mixed';
     }
@@ -52,17 +53,32 @@ exports.analyzeIntake = async (req, res, next) => {
       analysisToken = analysisTokenService.generateToken(req.user._id.toString(), payload, aiAnalysis);
     }
 
+    // Strip internal filePath from returned response
+    const clientEvidence = evidence.map(({ filePath, ...rest }) => rest);
+    const clientPayload = { ...payload, evidence: clientEvidence };
+
     // Note: Do NOT save to database yet. Step 5 will handle citizen review & final submission.
     res.status(200).json({
       success: true,
       data: {
-        ...payload,
+        ...clientPayload,
         aiAnalysis,
+        analysisData: aiAnalysis,
         analysisToken
       }
     });
   } catch (error) {
-    next(error);
+    console.error('AI complaint analysis failed:', error.message);
+    let statusCode = error.statusCode || 500;
+    if (res.statusCode && res.statusCode !== 200) {
+      statusCode = res.statusCode;
+    }
+    return res.status(statusCode).json({
+      success: false,
+      error: error.message || 'AI analysis temporarily unavailable',
+      message: error.message || 'AI analysis temporarily unavailable',
+      code: error.code || 'AI_ANALYSIS_FAILED'
+    });
   }
 };
 
