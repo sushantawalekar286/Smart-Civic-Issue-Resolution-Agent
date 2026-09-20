@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShieldAlert, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import GlassCard from '../../components/ui/GlassCard';
+import { Shield, Eye, EyeOff, AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
+import bgImage from '../../assets/background.jpg';
 import GlassInput from '../../components/ui/GlassInput';
-import GlassButton from '../../components/ui/GlassButton';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -45,153 +44,225 @@ const Register = () => {
   };
 
   return (
-    <div 
-      className="min-h-screen text-slate-200 bg-[#0f172a] flex items-center justify-center p-4 relative overflow-hidden font-sans"
-      style={{
-        backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 40%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 40%), radial-gradient(circle at 50% 80%, rgba(79, 70, 229, 0.1), transparent 50%)',
-        backgroundAttachment: 'fixed'
-      }}
-    >
-      <div className="max-w-5xl w-full grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+    <div className="min-h-screen bg-slate-950 font-sans flex flex-col justify-between">
+      <div className="min-h-screen w-full flex flex-col lg:flex-row">
         
-        {/* LEFT: Branding / Visual */}
-        <div className="hidden lg:flex flex-col justify-center space-y-8">
-          <div className="bg-blue-600 p-4 rounded-2xl w-fit border border-blue-500 shadow-md">
-            <ShieldAlert className="w-12 h-12 text-white" />
+        {/* ==================================================
+            LEFT SIDE (55%): Rural Background + Green Overlay
+           ================================================== */}
+        <div className="lg:w-[55%] relative min-h-[320px] lg:min-h-screen flex flex-col justify-between p-8 lg:p-16 overflow-hidden">
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${bgImage})` }}
+          />
+          {/* Dark Green Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/90 via-slate-950/90 to-emerald-900/85" />
+          
+          {/* Ambient Glow */}
+          <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-emerald-500/15 rounded-full blur-[80px] pointer-events-none" />
+
+          {/* Top Logo */}
+          <div className="relative z-10">
+            <Link to="/" className="inline-flex items-center gap-3 group">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-emerald-950/50 group-hover:scale-105 transition-transform">
+                <Shield className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="font-black text-xl text-white tracking-tight block">Smart Civic</span>
+                <span className="text-[11px] font-semibold text-emerald-300 tracking-wide block">AI-Powered Resolution</span>
+              </div>
+            </Link>
           </div>
-          <h1 className="text-5xl font-extrabold text-slate-800 tracking-tight leading-tight">
-            Join <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">SmartCivic</span>
-          </h1>
-          <p className="text-slate-600 text-lg leading-relaxed max-w-md">
-            Create an account to report issues in your neighborhood, track their resolution progress, and help improve your city.
-          </p>
-          <div className="space-y-4 pt-4">
-            <div className="flex items-center text-slate-700 font-medium bg-white p-3 rounded-xl border border-slate-200 w-fit shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-blue-500 mr-3"></span>
-              Fast Issue Resolution
+
+          {/* Left Branding Content */}
+          <div className="relative z-10 max-w-lg my-auto py-12">
+            <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 block mb-3">
+              CITIZEN REGISTRATION
+            </span>
+            <h1 className="text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] mb-6">
+              Join Smart Civic
+            </h1>
+            <p className="text-slate-300 text-base leading-relaxed mb-8">
+              Turn everyday civic problems into actionable reports.
+            </p>
+
+            {/* Feature Checkmarks */}
+            <div className="space-y-3.5">
+              <div className="flex items-center gap-3 text-slate-200 text-sm font-semibold">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                </div>
+                <span>Report issues easily</span>
+              </div>
+              <div className="flex items-center gap-3 text-slate-200 text-sm font-semibold">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                </div>
+                <span>Add photos and location</span>
+              </div>
+              <div className="flex items-center gap-3 text-slate-200 text-sm font-semibold">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                </div>
+                <span>Track your complaints</span>
+              </div>
+              <div className="flex items-center gap-3 text-slate-200 text-sm font-semibold">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                </div>
+                <span>Stay informed about progress</span>
+              </div>
             </div>
-            <div className="flex items-center text-slate-700 font-medium bg-white p-3 rounded-xl border border-slate-200 w-fit shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-cyan-500 mr-3"></span>
-              Direct Department Routing
-            </div>
+          </div>
+
+          {/* Footer Copyright */}
+          <div className="relative z-10 text-xs text-slate-400 font-medium">
+            © 2026 Smart Civic Issue Resolution Agent.
           </div>
         </div>
 
-        {/* RIGHT: Register Card */}
-        <div className="w-full max-w-md mx-auto lg:max-w-none">
-          <div className="lg:hidden flex flex-col items-center mb-8">
-            <div className="bg-blue-600 p-3 rounded-xl border border-blue-500 mb-4 shadow-sm">
-              <ShieldAlert className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-slate-800 text-center tracking-tight">SmartCivic Portal</h1>
-          </div>
-
-          <GlassCard className="p-8">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
-                Create Account
-              </h2>
-              <p className="mt-2 text-slate-500">
-                Sign up as a citizen to get started
-              </p>
+        {/* ==================================================
+            RIGHT SIDE (45%): Glass / White Auth Card
+           ================================================== */}
+        <div className="lg:w-[45%] bg-slate-900 flex items-center justify-center p-6 lg:p-12 relative">
+          <div className="w-full max-w-md">
+            
+            {/* Mobile Branding Header */}
+            <div className="lg:hidden text-center mb-8">
+              <Link to="/" className="inline-flex items-center gap-2 mb-2">
+                <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white">
+                  <Shield className="w-5 h-5" />
+                </div>
+                <span className="font-black text-xl text-white">Smart Civic</span>
+              </Link>
             </div>
 
-            {error && (
-              <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-6 flex items-start">
-                <AlertCircle className="w-5 h-5 text-rose-500 mt-0.5 shrink-0" />
-                <p className="ml-3 text-sm text-rose-700 font-medium">{error}</p>
+            {/* Auth Card */}
+            <div className="bg-white/95 backdrop-blur-md p-8 lg:p-10 rounded-3xl border border-slate-200 shadow-2xl">
+              <div className="mb-6">
+                <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                  Create your account
+                </h2>
+                <p className="mt-1.5 text-sm text-slate-500 font-medium">
+                  Start reporting and tracking civic issues.
+                </p>
               </div>
-            )}
 
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-2 gap-4">
+              {/* Error Alert */}
+              {error && (
+                <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-rose-500 mt-0.5 shrink-0" />
+                  <p className="text-xs sm:text-sm text-rose-700 font-semibold">{error}</p>
+                </div>
+              )}
+
+              {/* Registration Form */}
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">First Name</label>
+                    <GlassInput
+                      name="firstName"
+                      type="text"
+                      required
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      placeholder="John"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Last Name</label>
+                    <GlassInput
+                      name="lastName"
+                      type="text"
+                      required
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      placeholder="Doe"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">First Name</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Email Address</label>
                   <GlassInput
-                    name="firstName"
-                    type="text"
+                    name="email"
+                    type="email"
                     required
-                    value={formData.firstName}
+                    value={formData.email}
                     onChange={handleChange}
-                    placeholder="John"
+                    placeholder="you@example.com"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Last Name</label>
-                  <GlassInput
-                    name="lastName"
-                    type="text"
-                    required
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    placeholder="Doe"
-                  />
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Password</label>
+                  <div className="relative">
+                    <GlassInput
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="••••••••"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Email address</label>
-                <GlassInput
-                  name="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="you@example.com"
-                />
-              </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Confirm Password</label>
+                  <div className="relative">
+                    <GlassInput
+                      name="confirmPassword"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
-                <div className="relative">
-                  <GlassInput
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                  />
+                <div className="pt-2">
                   <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
-                    onClick={() => setShowPassword(!showPassword)}
+                    type="submit"
+                    disabled={loading}
+                    className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-900/20 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-500 active:scale-98 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 transition-all duration-150"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Creating account...</span>
+                      </span>
+                    ) : (
+                      <>
+                        <span>Create Account</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
                   </button>
                 </div>
-              </div>
+              </form>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Confirm Password</label>
-                <div className="relative">
-                  <GlassInput
-                    name="confirmPassword"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                  />
-                </div>
+              {/* Bottom Login Link */}
+              <div className="mt-6 pt-5 border-t border-slate-100 text-center">
+                <p className="text-slate-600 text-xs sm:text-sm font-medium">
+                  Already have an account?{' '}
+                  <Link to="/login" className="font-bold text-emerald-600 hover:text-emerald-700 transition-colors">
+                    Sign in
+                  </Link>
+                </p>
               </div>
-
-              <div className="pt-2">
-                <GlassButton type="submit" loading={loading} className="w-full">
-                  {loading ? 'Creating account...' : 'Create Account'}
-                </GlassButton>
-              </div>
-            </form>
-
-            <div className="mt-8 pt-6 border-t border-slate-200 text-center">
-              <p className="text-slate-500 text-sm">
-                Already have an account?{' '}
-                <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-                  Sign in
-                </Link>
-              </p>
             </div>
-          </GlassCard>
+          </div>
         </div>
       </div>
     </div>
@@ -199,3 +270,4 @@ const Register = () => {
 };
 
 export default Register;
+
