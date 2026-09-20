@@ -6,7 +6,7 @@ const ComplaintEvidence = ({ evidence = [] }) => {
 
   if (!evidence || evidence.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 text-indigo-300">
+      <div className="flex flex-col items-center justify-center py-8 text-slate-400">
         <ImageIcon className="w-8 h-8 opacity-50 mb-2" />
         <p className="text-sm font-medium">No evidence provided.</p>
       </div>
@@ -17,7 +17,7 @@ const ComplaintEvidence = ({ evidence = [] }) => {
 
   if (images.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 text-indigo-300">
+      <div className="flex flex-col items-center justify-center py-8 text-slate-400">
         <ImageIcon className="w-8 h-8 opacity-50 mb-2" />
         <p className="text-sm font-medium">No image evidence provided.</p>
       </div>
@@ -30,10 +30,10 @@ const ComplaintEvidence = ({ evidence = [] }) => {
         {images.map((img, idx) => (
           <div 
             key={idx} 
-            className="relative rounded-xl overflow-hidden border border-white/10 cursor-pointer group hover:border-indigo-500/50 transition-all bg-black/40"
+            className="relative rounded-xl overflow-hidden border border-slate-200 cursor-pointer group hover:border-blue-400 transition-all bg-slate-100"
             onClick={() => setSelectedImage(img.url)}
           >
-            <div className="absolute inset-0 bg-indigo-500/0 group-hover:bg-indigo-500/20 transition-colors z-10"></div>
+            <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/10 transition-colors z-10"></div>
             <img 
               src={img.url} 
               alt={img.fileName || `Evidence ${idx + 1}`} 

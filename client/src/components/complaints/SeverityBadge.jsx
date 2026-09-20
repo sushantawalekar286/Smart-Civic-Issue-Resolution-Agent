@@ -24,7 +24,7 @@ const SeverityBadge = ({ severity, className = '' }) => {
   const isCritical = severity === 'CRITICAL';
 
   return (
-    <GlassBadge variant={variant} className={`${className} ${isCritical ? 'animate-pulse ring-2 ring-red-500/50' : ''}`}>
+    <GlassBadge variant={variant} className={`${className} ${isCritical ? 'animate-pulse ring-2 ring-rose-200' : ''}`}>
       {icon}
       {label}
     </GlassBadge>

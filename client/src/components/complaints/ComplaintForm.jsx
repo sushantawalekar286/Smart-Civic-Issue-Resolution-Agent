@@ -83,9 +83,9 @@ const ComplaintForm = ({ onAnalyzed }) => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
-      <div>
-        <h3 className="text-xl font-bold text-white tracking-tight">Issue Details</h3>
-        <p className="mt-1 text-sm text-indigo-200">
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold text-slate-800 tracking-tight">Issue Details</h3>
+        <p className="mt-1 text-sm text-slate-600">
           Please provide a detailed description of the problem.
         </p>
         <div className="mt-4">
@@ -97,9 +97,9 @@ const ComplaintForm = ({ onAnalyzed }) => {
         </div>
       </div>
 
-      <div className="pt-6 border-t border-white/10">
-        <h3 className="text-xl font-bold text-white tracking-tight">Evidence (Optional)</h3>
-        <p className="mt-1 text-sm text-indigo-200">
+      <div className="space-y-4 pt-4 border-t border-slate-100">
+        <h3 className="text-xl font-bold text-slate-800 tracking-tight">Evidence (Optional)</h3>
+        <p className="mt-1 text-sm text-slate-600">
           Upload a clear photo of the issue.
         </p>
         <div className="mt-4">
@@ -111,9 +111,9 @@ const ComplaintForm = ({ onAnalyzed }) => {
         </div>
       </div>
 
-      <div className="pt-6 border-t border-white/10">
-        <h3 className="text-xl font-bold text-white tracking-tight">Location</h3>
-        <p className="mt-1 text-sm text-indigo-200">
+      <div className="space-y-4 pt-4 border-t border-slate-100">
+        <h3 className="text-xl font-bold text-slate-800 tracking-tight">Location</h3>
+        <p className="mt-1 text-sm text-slate-600">
           Pinpoint the exact location of the issue.
         </p>
         <div className="mt-4">
