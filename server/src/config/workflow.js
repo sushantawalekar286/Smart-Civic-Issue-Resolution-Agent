@@ -1,0 +1,4 @@
+module.exports = {
+  FOLLOW_UP_THRESHOLD_HOURS: parseInt(process.env.FOLLOW_UP_THRESHOLD_HOURS, 10) || 24,
+  ESCALATION_THRESHOLD_HOURS: parseInt(process.env.ESCALATION_THRESHOLD_HOURS, 10) || 48
+};

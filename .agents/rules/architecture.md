@@ -309,3 +309,85 @@ If requirements conflict with these rules, prioritize:
 * Problem statement requirements
 
 Ask for clarification when a change could destroy another developer's work.
+
+---
+
+## MVP Scope Protection
+
+Future developers and agents must:
+
+* prioritize P0 functionality
+* avoid implementing P1/P2 features before P0 is stable
+* avoid unnecessary architecture complexity
+* avoid creating unrelated modules
+* avoid overengineering
+* preserve the end-to-end complaint workflow
+* keep AI reasoning separate from deterministic application actions
+* keep the official problem requirements traceable to implementation
+
+The MVP specification in:
+
+docs/mvp-requirements.md
+
+should be treated as the source of truth for hackathon scope.
+
+---
+
+## Architecture Freeze
+
+For the hackathon, the following are frozen:
+
+### Roles
+citizen
+authority
+admin
+
+### Core collections
+users
+departments
+complaints
+agentActions
+
+### Backend architecture
+routes
+→ controllers
+→ services
+→ models
+
+### Frontend architecture
+pages
+→ components
+→ services
+→ hooks/context
+
+### Complaint lifecycle
+SUBMITTED
+→ ASSIGNED
+→ IN_PROGRESS
+→ RESOLVED
+
+with escalation path:
+ASSIGNED / IN_PROGRESS
+→ ESCALATED
+
+Architectural changes require explicit approval from the project lead.
+Bug fixes and implementation improvements are allowed.
+
+---
+
+## Database Schema Freeze
+
+The schema documented in:
+docs/database-schema.md
+is the source of truth.
+
+Do not independently create alternative:
+- User schemas
+- Complaint schemas
+- Department schemas
+- Agent action schemas
+- authentication collections
+- status collections
+- timeline collections
+
+Any required schema change must first be discussed with the project lead.
