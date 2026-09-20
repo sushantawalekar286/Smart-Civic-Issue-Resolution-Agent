@@ -5,6 +5,8 @@ const { errorHandler } = require('./middleware/error.middleware');
 
 const authRoutes = require('./routes/auth.routes');
 
+const complaintRoutes = require('./routes/complaint.routes');
+
 const app = express();
 
 app.use(express.json());
@@ -15,7 +17,7 @@ app.use(cors({
 }));
 
 // Route placeholders for future implementation
-// app.use('/api/v1/complaints', complaintRoutes);
+app.use('/api/v1/complaints', complaintRoutes);
 // app.use('/api/v1/authority', authorityRoutes);
 // app.use('/api/v1/admin', adminRoutes);
 

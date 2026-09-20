@@ -30,3 +30,19 @@ For the hackathon, the following architectural choices are FROZEN:
 
 > [!WARNING]
 > Architectural changes require explicit approval from the project lead. Bug fixes and implementation improvements are allowed.
+
+
+### Citizen Intake Flow (Step 3 to 4)
+Citizen
+↓
+Report Issue UI
+↓
+Evidence Upload
+↓
+Location Capture
+↓
+Validation
+↓
+Standardized Complaint Input
+↓
+STEP 4 AI Analysis
