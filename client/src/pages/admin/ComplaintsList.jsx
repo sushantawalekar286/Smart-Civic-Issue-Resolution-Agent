@@ -82,7 +82,7 @@ const ComplaintsList = () => {
               placeholder="Search by ID or description..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800 placeholder-slate-400"
             />
           </div>
 
@@ -92,7 +92,7 @@ const ComplaintsList = () => {
             <select
               value={status}
               onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-              className="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+              className="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800"
             >
               <option value="">All Statuses</option>
               <option value="SUBMITTED">SUBMITTED</option>
@@ -109,7 +109,7 @@ const ComplaintsList = () => {
             <select
               value={severity}
               onChange={(e) => { setSeverity(e.target.value); setPage(1); }}
-              className="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+              className="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800"
             >
               <option value="">All Severities</option>
               <option value="LOW">LOW</option>
@@ -125,7 +125,7 @@ const ComplaintsList = () => {
             <select
               value={issueType}
               onChange={(e) => { setIssueType(e.target.value); setPage(1); }}
-              className="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+              className="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800"
             >
               <option value="">All Types</option>
               <option value="Pothole">Pothole</option>
@@ -145,7 +145,7 @@ const ComplaintsList = () => {
             <select
               value={departmentId}
               onChange={(e) => { setDepartmentId(e.target.value); setPage(1); }}
-              className="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+              className="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800"
             >
               <option value="">All Departments</option>
               {departments.map(d => (
