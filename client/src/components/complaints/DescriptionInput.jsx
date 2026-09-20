@@ -4,7 +4,7 @@ import GlassTextarea from '../ui/GlassTextarea';
 const DescriptionInput = ({ value, onChange, error }) => {
   return (
     <div className="mb-6">
-      <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">
+      <label htmlFor="description" className="block text-sm font-medium text-slate-700 mb-2">
         What is the civic issue?
       </label>
       <GlassTextarea
@@ -16,7 +16,7 @@ const DescriptionInput = ({ value, onChange, error }) => {
         placeholder="Describe the problem, e.g., 'Large pothole on Main St. causing traffic delay...'"
         error={error}
       />
-      <div className="mt-2 text-xs text-indigo-300 text-right font-medium">
+      <div className="mt-2 text-xs text-slate-500 text-right font-medium">
          {value.length} characters
       </div>
     </div>

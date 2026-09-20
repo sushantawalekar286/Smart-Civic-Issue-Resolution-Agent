@@ -68,18 +68,18 @@ const EvidenceUploader = ({ file, onFileSelect, onRemove, error: parentError }) 
 
   return (
     <div className="mb-6">
-      <label className="block text-sm font-medium text-gray-300 mb-2">
+      <label className="block text-sm font-medium text-slate-700 mb-2">
         Upload Evidence Photo
       </label>
       
       {!file ? (
         <div 
-          className={`mt-1 flex justify-center px-6 pt-8 pb-8 border-2 border-dashed rounded-xl transition-all duration-300 cursor-pointer backdrop-blur-sm ${
+          className={`mt-1 flex justify-center px-6 pt-8 pb-8 border-2 border-dashed rounded-xl transition-all duration-300 cursor-pointer ${
             isDragging 
-              ? 'border-indigo-400 bg-indigo-500/20 shadow-[0_0_20px_rgba(99,102,241,0.3)] scale-[1.02]' 
+              ? 'border-blue-400 bg-blue-50 shadow-[0_0_20px_rgba(59,130,246,0.1)] scale-[1.02]' 
               : displayError 
-                ? 'border-rose-500/50 bg-rose-500/5 hover:bg-rose-500/10'
-                : 'border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30'
+                ? 'border-rose-300 bg-rose-50 hover:bg-rose-100'
+                : 'border-slate-300 bg-slate-50 hover:bg-slate-100 hover:border-slate-400'
           }`}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
@@ -87,11 +87,11 @@ const EvidenceUploader = ({ file, onFileSelect, onRemove, error: parentError }) 
           onClick={() => fileInputRef.current?.click()}
         >
           <div className="space-y-2 text-center pointer-events-none">
-            <div className={`p-3 rounded-full w-fit mx-auto mb-4 border transition-colors duration-300 ${isDragging ? 'bg-indigo-500/30 border-indigo-400 text-indigo-300' : 'bg-indigo-500/20 border-indigo-500/30 text-indigo-400'}`}>
+            <div className={`p-3 rounded-full w-fit mx-auto mb-4 border transition-colors duration-300 ${isDragging ? 'bg-blue-100 border-blue-400 text-blue-600' : 'bg-blue-50 border-blue-200 text-blue-500'}`}>
               <UploadCloud className={`h-8 w-8 ${isDragging ? 'animate-bounce' : ''}`} />
             </div>
-            <div className="flex text-sm text-gray-300 justify-center gap-1">
-              <span className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">Upload a file</span>
+            <div className="flex text-sm text-slate-600 justify-center gap-1">
+              <span className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">Upload a file</span>
               <p>or drag and drop</p>
               <input
                 type="file"
@@ -101,11 +101,11 @@ const EvidenceUploader = ({ file, onFileSelect, onRemove, error: parentError }) 
                 className="sr-only"
               />
             </div>
-            <p className="text-xs text-gray-400 font-medium">PNG, JPG, WEBP up to 5MB</p>
+            <p className="text-xs text-slate-500 font-medium">PNG, JPG, WEBP up to 5MB</p>
           </div>
         </div>
       ) : (
-        <div className="mt-1 flex flex-col items-center p-4 border border-white/20 rounded-xl bg-white/5 backdrop-blur-sm animate-in zoom-in-95 duration-300">
+        <div className="mt-1 flex flex-col items-center p-4 border border-slate-200 rounded-xl bg-slate-50 animate-in zoom-in-95 duration-300">
           <div className="relative w-full max-w-md h-48 overflow-hidden rounded-lg bg-black/40 group">
             <img src={previewUrl} alt="Evidence Preview" className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105" />
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -119,10 +119,10 @@ const EvidenceUploader = ({ file, onFileSelect, onRemove, error: parentError }) 
               </button>
             </div>
           </div>
-          <div className="mt-4 flex items-center justify-between w-full bg-white/5 p-3 rounded-lg border border-white/10">
+          <div className="mt-4 flex items-center justify-between w-full bg-white p-3 rounded-lg border border-slate-200">
             <div className="flex items-center gap-3 overflow-hidden">
-              <ImageIcon className="w-5 h-5 text-indigo-400 shrink-0" />
-              <span className="text-sm font-medium text-gray-200 truncate pr-4">{file.name}</span>
+              <ImageIcon className="w-5 h-5 text-blue-500 shrink-0" />
+              <span className="text-sm font-medium text-slate-700 truncate pr-4">{file.name}</span>
             </div>
             <button 
               type="button" 
