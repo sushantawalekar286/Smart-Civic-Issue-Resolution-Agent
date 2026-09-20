@@ -1,6 +1,8 @@
 # API Contract
 
-This document defines the API contracts implemented for the application foundation.
+## Step 3 & 4: Complaint Intake & Analyze
+`POST /api/v1/complaints/analyze`
+Returns AI analysis + `analysisToken` (Step 4 integration pending).
 
 ## Base URL
 `/api/v1`
@@ -176,6 +178,11 @@ Validates and prepares the citizen complaint input for the AI analysis pipeline.
 
 ---
 *Note: Step 4 AI Analysis is integrated into `/complaints/analyze`. Citizen Review and final Complaint creation occur in Step 5.*
+
+## Step 5: Complaint Submission
+`POST /api/v1/complaints`
+Accepts `analysisToken` from Step 4.
+*(Step 5 — pending Step 4 integration)*
 
 ---
 

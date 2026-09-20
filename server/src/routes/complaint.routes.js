@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const { protect, authorize } = require('../middleware/auth.middleware');
-const { analyzeIntake } = require('../controllers/complaint.controller');
+const complaintController = require('../controllers/complaint.controller');
 const { validateComplaintIntake } = require('../validators/complaint.validator');
 
 const router = express.Router();
@@ -12,8 +12,14 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
 
-// The endpoint is an intake contract for step 3. 
-// Uses multer first to parse multipart data, then validates text fields, then processes intake.
-router.post('/analyze', protect, authorize('citizen'), upload.single('image'), validateComplaintIntake, analyzeIntake);
+// Intake endpoint (Step 3/4): analyze intake payload and run AI analysis
+router.post('/analyze', protect, authorize('citizen'), upload.single('image'), validateComplaintIntake, complaintController.analyzeIntake);
+
+/**
+ * @route POST /api/v1/complaints
+ * @desc Submit a final complaint using an analysis token
+ * @access Private (Citizen)
+ */
+router.post('/', protect, authorize('citizen'), complaintController.submitComplaint);
 
 module.exports = router;
