@@ -14,12 +14,16 @@ import Home from '../pages/Home';
 import Profile from '../pages/citizen/Profile';
 import NotFound from '../pages/NotFound';
 import AdminLogin from '../pages/admin/AdminLogin';
+import AdminDashboard from '../pages/admin/Dashboard';
+import AuthorityDashboard from '../pages/authority/Dashboard';
 import ComplaintsList from '../pages/admin/ComplaintsList';
 import AdminComplaintDetails from '../pages/admin/ComplaintDetails';
 import AgentActionsList from '../pages/admin/AgentActionsList';
 import UsersList from '../pages/admin/UsersList';
 import AuthoritiesManagement from '../pages/admin/AuthoritiesManagement';
 import DepartmentsManagement from '../pages/admin/DepartmentsManagement';
+import Reports from '../pages/admin/Reports';
+import Settings from '../pages/admin/Settings';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
@@ -28,7 +32,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-500 font-medium">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
           <span>Verifying session permissions...</span>
         </div>
       </div>
@@ -38,7 +42,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   if (!user) return <Navigate to="/login" replace />;
 
   const userRole = (user.role || '').toUpperCase();
-  const normalizedAllowed = allowedRoles.map((r) => r.toUpperCase());
+  const normalizedAllowed = (allowedRoles || []).map((r) => r.toUpperCase());
 
   if (allowedRoles && !normalizedAllowed.includes(userRole)) {
     return (
@@ -53,7 +57,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
           </p>
           <Link
             to="/login"
-            className="inline-block mt-5 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition"
+            className="inline-block mt-5 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition"
           >
             Return to Login
           </Link>
@@ -64,10 +68,6 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   return children;
 };
-
-const AuthorityDashboard = () => <div><h2>Authority Dashboard</h2></div>;
-
-const AdminDashboard = () => <div><h2>Admin Dashboard</h2></div>;
 
 const AppRoutes = () => {
   return (
@@ -92,7 +92,13 @@ const AppRoutes = () => {
 
       {/* Authority routes */}
       <Route path="/authority/dashboard" element={
-        <ProtectedRoute allowedRoles={['AUTHORITY']}>
+        <ProtectedRoute allowedRoles={['authority', 'AUTHORITY']}>
+          <AuthorityDashboard />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/authority/complaints" element={
+        <ProtectedRoute allowedRoles={['authority', 'AUTHORITY']}>
           <AuthorityDashboard />
         </ProtectedRoute>
       } />
@@ -137,6 +143,16 @@ const AppRoutes = () => {
       <Route path="/admin/departments" element={
         <ProtectedRoute allowedRoles={['admin', 'ADMIN']}>
           <DepartmentsManagement />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/reports" element={
+        <ProtectedRoute allowedRoles={['admin', 'ADMIN']}>
+          <Reports />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings" element={
+        <ProtectedRoute allowedRoles={['admin', 'ADMIN']}>
+          <Settings />
         </ProtectedRoute>
       } />
       

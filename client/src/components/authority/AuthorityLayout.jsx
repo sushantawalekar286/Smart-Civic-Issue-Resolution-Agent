@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import AdminSidebar from './AdminSidebar';
-import AdminTopNavbar from './AdminTopNavbar';
+import AuthoritySidebar from './AuthoritySidebar';
+import AdminTopNavbar from '../admin/AdminTopNavbar';
 
-export default function AdminLayout({ children, title, subtitle, actions }) {
+export default function AuthorityLayout({ children, title, subtitle, actions }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex font-sans antialiased selection:bg-blue-500 selection:text-white">
       {/* Sidebar Navigation */}
-      <AdminSidebar
+      <AuthoritySidebar
         mobileOpen={mobileMenuOpen}
         onCloseMobile={() => setMobileMenuOpen(false)}
       />
@@ -24,7 +24,6 @@ export default function AdminLayout({ children, title, subtitle, actions }) {
 
         {/* Page Content Container */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto animate-fade-in">
-          {/* Optional Action Header if provided */}
           {actions && (
             <div className="flex items-center justify-between pb-6 mb-6 border-b border-slate-200/80">
               <div>

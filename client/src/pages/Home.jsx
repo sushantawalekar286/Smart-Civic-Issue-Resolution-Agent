@@ -20,7 +20,13 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen text-slate-200">
+    <div 
+      className="min-h-screen text-slate-200 bg-[#0f172a]"
+      style={{
+        backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 40%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 40%), radial-gradient(circle at 50% 80%, rgba(79, 70, 229, 0.1), transparent 50%)',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       {/* Navigation */}
       <header className="absolute inset-x-0 top-0 z-50">
         <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">

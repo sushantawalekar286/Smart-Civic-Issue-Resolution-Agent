@@ -26,7 +26,13 @@ const CitizenLayout = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row relative">
+    <div 
+      className="min-h-screen flex flex-col md:flex-row relative bg-[#0f172a] text-slate-100"
+      style={{
+        backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 40%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 40%), radial-gradient(circle at 50% 80%, rgba(79, 70, 229, 0.1), transparent 50%)',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       {/* Mobile Top Navbar */}
       <nav className="md:hidden sticky top-0 z-50 bg-white/10 backdrop-blur-xl border-b border-white/20 px-4 py-3 flex justify-between items-center shadow-lg">
         <div className="flex items-center gap-2">
