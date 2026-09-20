@@ -60,8 +60,21 @@ const ComplaintForm = ({ onAnalyzed }) => {
 
   if (step === 2) {
     return (
-      <div>
-        {submitError && <p style={{ color: 'red' }}>{submitError}</p>}
+      <div className="space-y-6">
+        {submitError && (
+          <div className="bg-red-50 border-l-4 border-red-400 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">{submitError}</p>
+              </div>
+            </div>
+          </div>
+        )}
         <InputSummary 
           description={description}
           file={file}
@@ -75,30 +88,60 @@ const ComplaintForm = ({ onAnalyzed }) => {
   }
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-      <DescriptionInput 
-        value={description} 
-        onChange={setDescription} 
-        error={errors.description} 
-      />
-      <EvidenceUploader 
-        file={file} 
-        onFileSelect={setFile} 
-        onRemove={() => setFile(null)} 
-      />
-      <LocationPicker 
-        location={location} 
-        onLocationSelect={setLocation} 
-        error={errors.location} 
-      />
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-lg leading-6 font-medium text-gray-900">Issue Details</h3>
+        <p className="mt-1 text-sm text-gray-500">
+          Please provide a detailed description of the problem.
+        </p>
+        <div className="mt-4">
+          <DescriptionInput 
+            value={description} 
+            onChange={setDescription} 
+            error={errors.description} 
+          />
+        </div>
+      </div>
+
+      <div className="pt-6 border-t border-gray-200">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">Evidence (Optional)</h3>
+        <p className="mt-1 text-sm text-gray-500">
+          Upload a clear photo of the issue.
+        </p>
+        <div className="mt-4">
+          <EvidenceUploader 
+            file={file} 
+            onFileSelect={setFile} 
+            onRemove={() => setFile(null)} 
+          />
+        </div>
+      </div>
+
+      <div className="pt-6 border-t border-gray-200">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">Location</h3>
+        <p className="mt-1 text-sm text-gray-500">
+          Pinpoint the exact location of the issue.
+        </p>
+        <div className="mt-4">
+          <LocationPicker 
+            location={location} 
+            onLocationSelect={setLocation} 
+            error={errors.location} 
+          />
+        </div>
+      </div>
       
-      <button 
-        type="button" 
-        onClick={handleReview} 
-        style={{ marginTop: '20px', padding: '10px 20px', fontSize: '16px' }}
-      >
-        Review Complaint
-      </button>
+      <div className="pt-5 border-t border-gray-200">
+        <div className="flex justify-end">
+          <button 
+            type="button" 
+            onClick={handleReview} 
+            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Review Complaint
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,36 +1,33 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ComplaintForm from '../../components/complaints/ComplaintForm';
+import PageHeader from '../../components/common/PageHeader';
 
 const ReportIssue = () => {
-  const [analyzedPayload, setAnalyzedPayload] = useState(null);
+  const navigate = useNavigate();
 
   const handleAnalyzed = (payload) => {
-    // This is where Step 3 ends. The payload is standardized and ready for Step 4.
-    setAnalyzedPayload(payload);
+    // Navigate to the analysis review page, passing the payload in state
+    navigate('/citizen/analyze/new', {
+      state: {
+        analysisData: payload.analysisData,
+        analysisToken: payload.analysisToken
+      }
+    });
   };
 
-  if (analyzedPayload) {
-    return (
-      <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-        <h2>Complaint Analyzed (Ready for Step 4)</h2>
-        <p style={{ color: 'green' }}>
-          The backend has successfully validated the input and returned the standardized complaint payload. 
-          No final complaint record has been created yet. AI Analysis is deferred to Step 4.
-        </p>
-        <pre style={{ background: '#f4f4f4', padding: '15px', overflowX: 'auto' }}>
-          {JSON.stringify(analyzedPayload, null, 2)}
-        </pre>
-        <button onClick={() => setAnalyzedPayload(null)} style={{ marginTop: '20px' }}>
-          Report Another Issue
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div style={{ padding: '20px' }}>
-      <h1 style={{ textAlign: 'center' }}>Report a Civic Issue</h1>
-      <ComplaintForm onAnalyzed={handleAnalyzed} />
+    <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <PageHeader 
+        title="Report a Civic Issue" 
+        description="Provide details, photos, and location of the issue so we can analyze and route it to the correct department." 
+      />
+      
+      <div className="bg-white shadow sm:rounded-lg">
+        <div className="px-4 py-5 sm:p-6">
+          <ComplaintForm onAnalyzed={handleAnalyzed} />
+        </div>
+      </div>
     </div>
   );
 };
