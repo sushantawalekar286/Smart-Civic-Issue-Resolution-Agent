@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { protect, authorize } = require('../middleware/auth.middleware');
+const { protect, requireRole } = require('../middleware/auth.middleware');
 const { analyzeIntake } = require('../controllers/complaint.controller');
 const { validateComplaintIntake } = require('../validators/complaint.validator');
 
@@ -14,6 +14,6 @@ const upload = multer({
 
 // The endpoint is an intake contract for step 3. 
 // Uses multer first to parse multipart data, then validates text fields, then processes intake.
-router.post('/analyze', protect, authorize('citizen'), upload.single('image'), validateComplaintIntake, analyzeIntake);
+router.post('/analyze', protect, requireRole('citizen'), upload.single('image'), validateComplaintIntake, analyzeIntake);
 
 module.exports = router;
