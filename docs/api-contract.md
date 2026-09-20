@@ -101,4 +101,53 @@ Retrieves the authenticated user's profile based on the JWT cookie. Requires Aut
 ```
 
 ---
-*Note: Other APIs (Complaints, Authority, Admin) are deferred to later development steps.*
+
+## Complaint Intake APIs
+
+### 1. Analyze Complaint Intake (Step 3 payload validation)
+**POST /complaints/analyze**
+
+Validates and prepares the citizen complaint input for the AI analysis pipeline. DOES NOT create a database record.
+
+**Headers**
+- `Cookie: jwt=<token>` or `Authorization: Bearer <token>`
+- `Content-Type: multipart/form-data`
+
+**Role Required:** `citizen`
+
+**Request Body (FormData)**
+- `description` (String, required): Detailed description of the civic issue (10-1000 chars).
+- `location` (JSON String, required): JSON object with `{ latitude: float, longitude: float, address: string }`.
+- `image` (File, optional): Uploaded image (JPEG, PNG, WEBP), max 5MB.
+
+**Response (200 OK)**
+```json
+{
+  "success": true,
+  "data": {
+    "description": "There is a large pothole near the college entrance.",
+    "inputMethod": "mixed",
+    "location": {
+      "latitude": 16.7,
+      "longitude": 74.2,
+      "address": ""
+    },
+    "evidence": [
+      {
+        "type": "image",
+        "url": "https://res.cloudinary.com/...",
+        "fileName": "pothole.jpg",
+        "mimeType": "image/jpeg"
+      }
+    ]
+  }
+}
+```
+
+**Response Errors (400 Bad Request)**
+- `400 Bad Request`: Validation failure (e.g. "Please describe the civic issue." or "Unsupported image format.").
+- `401 Unauthorized`: Unauthenticated.
+- `403 Forbidden`: Authenticated as non-citizen.
+
+---
+*Note: AI analysis step and Admin/Authority APIs are deferred to later development steps.*
