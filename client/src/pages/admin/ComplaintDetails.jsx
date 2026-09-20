@@ -19,9 +19,9 @@ const ComplaintDetails = () => {
         setLoading(true);
         setError('');
         const res = await adminAPI.getComplaintById(complaintId);
-        setComplaint(res.data.data);
+        setComplaint(res.data || res || null);
       } catch (err) {
-        setError(err.response?.data?.error || 'Failed to load complaint details');
+        setError(err.response?.data?.error || err.message || 'Failed to load complaint details');
       } finally {
         setLoading(false);
       }
@@ -31,7 +31,7 @@ const ComplaintDetails = () => {
       try {
         setActionsLoading(true);
         const res = await adminAPI.getComplaintAgentActions(complaintId);
-        setAgentActions(res.data.actions || []);
+        setAgentActions(res.actions || res.data?.actions || []);
       } catch (err) {
         // Safe fallback if actions fail
         setAgentActions([]);
