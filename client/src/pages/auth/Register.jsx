@@ -56,11 +56,11 @@ const Register = () => {
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: `url(${bgImage})` }}
           />
-          {/* Dark Green Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/90 via-slate-950/90 to-emerald-900/85" />
+          {/* Dark Green/Slate Heavier Overlay with Backdrop Blur to hide burned-in image text */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950/95 via-emerald-950/92 to-slate-950/96 backdrop-blur-md" />
           
           {/* Ambient Glow */}
-          <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-emerald-500/15 rounded-full blur-[80px] pointer-events-none" />
+          <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
 
           {/* Top Logo */}
           <div className="relative z-10">
@@ -125,7 +125,7 @@ const Register = () => {
         {/* ==================================================
             RIGHT SIDE (45%): Glass / White Auth Card
            ================================================== */}
-        <div className="lg:w-[45%] bg-slate-900 flex items-center justify-center p-6 lg:p-12 relative">
+        <div className="lg:w-[45%] bg-gradient-to-br from-slate-950 via-emerald-950/30 to-slate-950 border-l border-emerald-900/20 flex items-center justify-center p-6 lg:p-12 relative">
           <div className="w-full max-w-md">
             
             {/* Mobile Branding Header */}
