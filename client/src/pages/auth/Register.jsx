@@ -34,8 +34,12 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const { confirmPassword, ...registerData } = formData;
-      await register(registerData);
+      const name = `${formData.firstName} ${formData.lastName}`.trim();
+      await register({
+        name,
+        email: formData.email,
+        password: formData.password
+      });
       navigate('/citizen/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || err.response?.data?.message || 'Registration failed');

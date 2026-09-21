@@ -22,7 +22,8 @@ const setTokenCookie = (res, token) => {
 
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const name = (req.body.name || `${req.body.firstName || ''} ${req.body.lastName || ''}`).trim();
+    const { email, password } = req.body;
 
     if (!name || !email || !password) {
       res.status(400);
