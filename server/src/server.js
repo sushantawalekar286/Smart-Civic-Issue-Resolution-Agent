@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 5000;
 const { startMonitoringScheduler } = require('./services/agent/monitorComplaints.service');
 
 connectDB().then(() => {
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 
     // Start background agent monitoring scheduler if not in test environment
