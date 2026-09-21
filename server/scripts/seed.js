@@ -6,7 +6,11 @@ const User = require('../src/models/User');
 
 const seedData = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+    if (!mongoUri) {
+      throw new Error('MongoDB configuration missing: set MONGODB_URI in the environment.');
+    }
+    await mongoose.connect(mongoUri);
     console.log('Connected to MongoDB for seeding');
 
     // 1. Seed Departments

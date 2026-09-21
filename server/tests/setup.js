@@ -27,7 +27,8 @@ jest.setTimeout(30000);
 
 beforeAll(async () => {
   if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/smart-civic-test');
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/smart-civic-test';
+    await mongoose.connect(mongoUri);
   }
 });
 
