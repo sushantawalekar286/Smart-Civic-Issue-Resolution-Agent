@@ -1,50 +1,48 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShieldAlert, Eye, EyeOff, AlertCircle, User, Shield, Building2, KeyRound, Check, ArrowRight } from 'lucide-react';
+import { ShieldAlert, Eye, EyeOff, AlertCircle, User, Shield, Building2, KeyRound, Check, Sparkles, ChevronRight } from 'lucide-react';
 import GlassCard from '../../components/ui/GlassCard';
 import GlassInput from '../../components/ui/GlassInput';
 import GlassButton from '../../components/ui/GlassButton';
 
-const DEMO_CREDENTIALS = [
+const QUICK_DEMO_ACCOUNTS = [
   {
-    role: 'Citizen',
+    role: 'Citizen Account',
     email: 'citizen@civic.local',
     password: 'citizenpassword',
     icon: User,
-    badgeColor: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
-    description: 'Report civic issues & track updates'
+    color: 'from-emerald-500/20 to-teal-500/20 border-emerald-500/30 text-emerald-300',
+    desc: 'Report civic issues & track progress'
   },
   {
-    role: 'Authority (Road Dept)',
+    role: 'Road Dept Authority',
     email: 'road@civic.local',
     password: 'roadpassword',
     icon: Building2,
-    badgeColor: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-    description: 'Manage & update assigned complaints'
+    color: 'from-blue-500/20 to-cyan-500/20 border-blue-500/30 text-blue-300',
+    desc: 'Manage road & pothole complaints'
   },
   {
-    role: 'Authority (Sanitation)',
+    role: 'Sanitation Authority',
     email: 'sanitation@civic.local',
     password: 'sanitationpassword',
     icon: Building2,
-    badgeColor: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-    description: 'Handle waste & cleaning reports'
+    color: 'from-cyan-500/20 to-sky-500/20 border-cyan-500/30 text-cyan-300',
+    desc: 'Manage garbage & cleanliness'
   },
   {
-    role: 'System Admin',
+    role: 'System Administrator',
     email: 'admin@civic.local',
     password: 'adminpassword',
     icon: Shield,
-    badgeColor: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
-    description: 'Full system oversight & management'
+    color: 'from-purple-500/20 to-indigo-500/20 border-purple-500/30 text-purple-300',
+    desc: 'System oversight & user management'
   }
 ];
 
-const ALL_AUTHORITIES = [
-  { label: 'Road Dept', email: 'road@civic.local', pass: 'roadpassword' },
-  { label: 'Sanitation', email: 'sanitation@civic.local', pass: 'sanitationpassword' },
-  { label: 'Water Dept', email: 'water@civic.local', pass: 'waterpassword' },
+const OTHER_AUTHORITIES = [
+  { label: 'Water', email: 'water@civic.local', pass: 'waterpassword' },
   { label: 'Electrical', email: 'electrical@civic.local', pass: 'electricalpassword' },
   { label: 'Drainage', email: 'drainage@civic.local', pass: 'drainagepassword' },
   { label: 'Infrastructure', email: 'infra@civic.local', pass: 'infrapassword' }
@@ -56,14 +54,15 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [selectedCred, setSelectedCred] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(null);
+  
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleFillCredentials = (credEmail, credPassword, label) => {
-    setEmail(credEmail);
-    setPassword(credPassword);
-    setSelectedCred(label);
+  const handleSelectDemo = (demoEmail, demoPassword, roleName) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    setSelectedRole(roleName);
     setError('');
   };
 
@@ -86,124 +85,126 @@ const Login = () => {
 
   return (
     <div 
-      className="min-h-screen text-slate-200 bg-[#0f172a] flex items-center justify-center p-4 lg:p-8 relative overflow-hidden font-sans"
+      className="min-h-screen text-slate-100 bg-[#0f172a] flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden font-sans"
       style={{
-        backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 40%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 40%), radial-gradient(circle at 50% 80%, rgba(79, 70, 229, 0.1), transparent 50%)',
+        backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 45%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 45%), radial-gradient(circle at 50% 80%, rgba(79, 70, 229, 0.1), transparent 50%)',
         backgroundAttachment: 'fixed'
       }}
     >
-      <div className="max-w-6xl w-full grid lg:grid-cols-12 gap-8 items-start">
+      {/* Background glow circle */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+      <div className="max-w-6xl w-full grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
         
-        {/* LEFT / BRANDING & DEMO CREDENTIALS BOX */}
-        <div className="lg:col-span-6 flex flex-col justify-center space-y-6">
+        {/* LEFT COLUMN: Branding & Demo Quick-Fill */}
+        <div className="lg:col-span-6 space-y-6">
           <div className="flex items-center space-x-3">
-            <div className="bg-gradient-to-tr from-blue-600 to-indigo-600 p-3 rounded-2xl shadow-lg border border-blue-400/30">
-              <ShieldAlert className="w-8 h-8 text-white" />
+            <div className="bg-gradient-to-tr from-indigo-600 to-blue-600 p-2.5 rounded-xl shadow-lg border border-indigo-400/30">
+              <ShieldAlert className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-extrabold text-slate-800 dark:text-white tracking-tight">SmartCivic Portal</h1>
-              <p className="text-xs text-slate-500 font-medium">Civic Issue Resolution Platform</p>
+              <span className="text-xl font-bold text-white tracking-tight">CivicAI Portal</span>
+              <p className="text-xs text-indigo-300/80 font-medium">Smart Civic Resolution Agent</p>
             </div>
           </div>
 
           <div>
-            <h2 className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight leading-tight">
-              Resolve Civic Issues <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Smarter</span>
-            </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 leading-relaxed">
-              Report issues with AI assist, track real-time resolution status, and build better communities together.
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+              Sign In to Your <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-teal-300">
+                Civic Resolution Hub
+              </span>
+            </h1>
+            <p className="mt-3 text-slate-300 text-sm leading-relaxed max-w-lg">
+              Empowering citizens and authorities with AI-driven issue analysis, instant routing, and automated resolution tracking.
             </p>
           </div>
 
           {/* DEMO CREDENTIALS BOX */}
-          <GlassCard className="p-5 border-blue-500/20 bg-slate-900/60 backdrop-blur-xl">
-            <div className="flex items-center justify-between mb-4 border-b border-slate-700/50 pb-3">
+          <div className="bg-slate-900/80 backdrop-blur-xl border border-indigo-500/20 rounded-2xl p-5 shadow-2xl space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center space-x-2">
-                <KeyRound className="w-5 h-5 text-amber-400" />
-                <h3 className="text-sm font-semibold text-slate-200">Demo Login Credentials</h3>
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Demo Accounts (1-Click Auto-fill)</h3>
               </div>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-400 border border-amber-400/20 font-mono">Click to Auto-fill</span>
+              <span className="text-[11px] text-amber-400/90 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-md font-mono">
+                Click to load
+              </span>
             </div>
 
-            <div className="space-y-2.5">
-              {DEMO_CREDENTIALS.map((cred) => {
-                const IconComponent = cred.icon;
-                const isSelected = selectedCred === cred.role;
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+              {QUICK_DEMO_ACCOUNTS.map((account) => {
+                const IconComp = account.icon;
+                const isSelected = selectedRole === account.role;
                 return (
                   <button
-                    key={cred.role}
+                    key={account.role}
                     type="button"
-                    onClick={() => handleFillCredentials(cred.email, cred.password, cred.role)}
-                    className={`w-full text-left p-3 rounded-xl border transition-all duration-200 flex items-center justify-between group ${
+                    onClick={() => handleSelectDemo(account.email, account.password, account.role)}
+                    className={`text-left p-3 rounded-xl border transition-all duration-200 group flex flex-col justify-between ${
                       isSelected 
-                        ? 'bg-blue-600/20 border-blue-500/60 shadow-md ring-1 ring-blue-500/40' 
-                        : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-800/80 hover:border-slate-600'
+                        ? 'bg-indigo-600/30 border-indigo-500 shadow-md ring-1 ring-indigo-500/50' 
+                        : 'bg-slate-800/40 border-slate-700/60 hover:bg-slate-800/80 hover:border-slate-600'
                     }`}
                   >
-                    <div className="flex items-center space-x-3 min-w-0">
-                      <div className={`p-2 rounded-lg border ${cred.badgeColor}`}>
-                        <IconComponent className="w-4 h-4" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xs font-bold text-slate-200">{cred.role}</span>
+                    <div className="flex items-center justify-between w-full mb-1">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <div className={`p-1.5 rounded-lg border bg-gradient-to-br ${account.color}`}>
+                          <IconComp className="w-3.5 h-3.5" />
                         </div>
-                        <p className="text-[11px] text-slate-400 font-mono truncate">{cred.email}</p>
+                        <span className="text-xs font-semibold text-white truncate">{account.role}</span>
                       </div>
-                    </div>
-                    <div className="flex items-center space-x-2 shrink-0 ml-2">
-                      <span className="text-[10px] text-slate-400 font-mono bg-slate-900/80 px-2 py-1 rounded border border-slate-700">{cred.password}</span>
                       {isSelected ? (
-                        <Check className="w-4 h-4 text-emerald-400" />
+                        <Check className="w-4 h-4 text-emerald-400 shrink-0 ml-1" />
                       ) : (
-                        <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-300 group-hover:translate-x-0.5 transition-all shrink-0 ml-1" />
                       )}
                     </div>
+                    <div className="text-[11px] text-slate-400 font-mono truncate">{account.email}</div>
                   </button>
                 );
               })}
             </div>
 
-            {/* Additional Authorities dropdown/chips */}
-            <div className="mt-4 pt-3 border-t border-slate-700/50">
-              <p className="text-[11px] font-medium text-slate-400 mb-2">More Department Authority Accounts:</p>
-              <div className="flex flex-wrap gap-1.5">
-                {ALL_AUTHORITIES.map((auth) => (
-                  <button
-                    key={auth.label}
-                    type="button"
-                    onClick={() => handleFillCredentials(auth.email, auth.pass, `Auth: ${auth.label}`)}
-                    className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-blue-600/20 border border-slate-700 hover:border-blue-500/50 text-slate-300 hover:text-white transition-colors"
-                  >
-                    {auth.label}
-                  </button>
-                ))}
-              </div>
+            {/* Other authority quick chips */}
+            <div className="pt-2 border-t border-slate-800 flex items-center gap-2 flex-wrap text-xs">
+              <span className="text-slate-400 text-[11px]">More Authorities:</span>
+              {OTHER_AUTHORITIES.map((auth) => (
+                <button
+                  key={auth.label}
+                  type="button"
+                  onClick={() => handleSelectDemo(auth.email, auth.pass, `${auth.label} Dept`)}
+                  className="px-2 py-0.5 rounded bg-slate-800 hover:bg-indigo-600/30 border border-slate-700 hover:border-indigo-500 text-[11px] text-slate-300 hover:text-white transition-all font-mono"
+                >
+                  {auth.label}
+                </button>
+              ))}
             </div>
-          </GlassCard>
+          </div>
         </div>
 
-        {/* RIGHT: Login Card */}
+        {/* RIGHT COLUMN: Glass Login Form */}
         <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none">
-          <GlassCard className="p-8">
+          <GlassCard className="p-8 bg-slate-900/90 border-slate-800 shadow-2xl backdrop-blur-2xl">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">
-                Welcome back
+              <h2 className="text-2xl font-bold text-white tracking-tight">
+                Welcome Back
               </h2>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                Sign in to access your dashboard
+              <p className="mt-1 text-sm text-slate-400">
+                Enter your details or select a demo account to sign in.
               </p>
             </div>
 
-            {selectedCred && (
-              <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl p-3 mb-5 flex items-center justify-between">
-                <span className="text-xs text-blue-700 dark:text-blue-300 font-medium">
-                  Loaded credential for: <strong>{selectedCred}</strong>
-                </span>
+            {selectedRole && (
+              <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-3 mb-5 flex items-center justify-between text-xs">
+                <div className="flex items-center space-x-2 text-indigo-300">
+                  <Check className="w-4 h-4 text-indigo-400 shrink-0" />
+                  <span>Selected: <strong className="text-white">{selectedRole}</strong></span>
+                </div>
                 <button 
                   type="button" 
-                  onClick={() => setSelectedCred(null)}
-                  className="text-[11px] text-blue-500 hover:text-blue-700 underline"
+                  onClick={() => { setSelectedRole(null); setEmail(''); setPassword(''); }}
+                  className="text-slate-400 hover:text-white text-[11px] underline"
                 >
                   Clear
                 </button>
@@ -211,16 +212,16 @@ const Login = () => {
             )}
 
             {error && (
-              <div className="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl p-4 mb-6 flex items-start">
-                <AlertCircle className="w-5 h-5 text-rose-500 mt-0.5 shrink-0" />
-                <p className="ml-3 text-sm text-rose-700 dark:text-rose-300 font-medium">{error}</p>
+              <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 mb-6 flex items-start">
+                <AlertCircle className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
+                <p className="ml-3 text-sm text-rose-300 font-medium">{error}</p>
               </div>
             )}
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                  Email address
+                <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                  Email Address
                 </label>
                 <GlassInput
                   id="email"
@@ -231,14 +232,15 @@ const Login = () => {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    if (selectedCred) setSelectedCred(null);
+                    if (selectedRole) setSelectedRole(null);
                   }}
                   placeholder="you@example.com"
+                  className="bg-slate-950/60 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
                   Password
                 </label>
                 <div className="relative">
@@ -251,19 +253,18 @@ const Login = () => {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
-                      if (selectedCred) setSelectedCred(null);
+                      if (selectedRole) setSelectedRole(null);
                     }}
                     placeholder="••••••••"
+                    className="bg-slate-950/60 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 pr-10"
                   />
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                    <button
-                      type="button"
-                      className="text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white focus:outline-none transition-colors"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
 
@@ -271,27 +272,28 @@ const Login = () => {
                 <GlassButton
                   type="submit"
                   loading={loading}
-                  className="w-full"
+                  variant="primary"
+                  className="w-full py-3 text-sm font-semibold tracking-wide"
                 >
-                  {loading ? 'Signing in...' : 'Login to Account'}
+                  {loading ? 'Signing in...' : 'Sign In to Account'}
                 </GlassButton>
               </div>
             </form>
 
-            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 text-center">
-              <p className="text-slate-500 dark:text-slate-400 text-sm">
+            <div className="mt-8 pt-6 border-t border-slate-800 text-center">
+              <p className="text-slate-400 text-sm">
                 Don't have an account?{' '}
-                <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 transition-colors">
+                <Link to="/register" className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
                   Create Citizen Account
                 </Link>
               </p>
             </div>
           </GlassCard>
         </div>
+
       </div>
     </div>
   );
 };
 
 export default Login;
-
