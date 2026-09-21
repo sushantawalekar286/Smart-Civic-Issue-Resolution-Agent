@@ -4,13 +4,24 @@ const bcrypt = require('bcryptjs');
 const Department = require('../src/models/Department');
 const User = require('../src/models/User');
 
+const dns = require('dns');
+
 const seedData = async () => {
   try {
     const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
     if (!mongoUri) {
       throw new Error('MongoDB configuration missing: set MONGODB_URI in the environment.');
     }
-    await mongoose.connect(mongoUri);
+    try {
+      await mongoose.connect(mongoUri);
+    } catch (connErr) {
+      if (connErr.message && connErr.message.includes('querySrv ECONNREFUSED')) {
+        dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+        await mongoose.connect(mongoUri);
+      } else {
+        throw connErr;
+      }
+    }
     console.log('Connected to MongoDB for seeding');
 
     // 1. Seed Departments

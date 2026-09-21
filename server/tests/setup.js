@@ -26,10 +26,23 @@ process.env.JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
 jest.setTimeout(30000);
 
+const dns = require('dns');
+
 beforeAll(async () => {
   if (mongoose.connection.readyState === 0) {
     const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/smart-civic-test';
-    await mongoose.connect(mongoUri);
+    try {
+      await mongoose.connect(mongoUri);
+    } catch (err) {
+      if (err.message && err.message.includes('querySrv ECONNREFUSED')) {
+        try {
+          dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+        } catch (_) {}
+        await mongoose.connect(mongoUri);
+      } else {
+        throw err;
+      }
+    }
   }
 });
 
