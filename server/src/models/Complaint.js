@@ -76,6 +76,10 @@ const complaintSchema = new mongoose.Schema({
         type: String,
         default: ""
       },
+      publicId: {
+        type: String,
+        default: ""
+      },
       uploadedAt: {
         type: Date,
         default: Date.now

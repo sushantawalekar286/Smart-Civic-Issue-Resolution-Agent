@@ -19,6 +19,7 @@ try {
   // Ignore if mongodb package layout changes
 }
 
+require('dotenv').config();
 const mongoose = require('mongoose');
 
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'secret';

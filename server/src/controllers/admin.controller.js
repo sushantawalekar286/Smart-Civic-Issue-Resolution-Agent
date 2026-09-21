@@ -14,7 +14,9 @@ exports.getComplaints = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      ...result
+      data: result.complaints,
+      complaints: result.complaints,
+      pagination: result.pagination
     });
   } catch (error) {
     if (error.statusCode) res.status(error.statusCode);
@@ -32,7 +34,8 @@ exports.getComplaintById = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: complaint
+      data: complaint,
+      complaint
     });
   } catch (error) {
     if (error.statusCode) res.status(error.statusCode);
@@ -54,7 +57,9 @@ exports.getAgentActions = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      ...result
+      data: result.actions,
+      actions: result.actions,
+      pagination: result.pagination
     });
   } catch (error) {
     if (error.statusCode) res.status(error.statusCode);
@@ -72,7 +77,8 @@ exports.getComplaintAgentActions = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      ...result
+      ...result,
+      data: result.actions
     });
   } catch (error) {
     if (error.statusCode) res.status(error.statusCode);
