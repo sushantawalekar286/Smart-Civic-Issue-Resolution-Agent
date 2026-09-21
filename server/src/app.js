@@ -14,22 +14,36 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+const clientUrlEnv = process.env.CLIENT_URL || 'http://localhost:5173';
+const parsedClientUrls = clientUrlEnv
+  .split(',')
+  .map(u => u.trim().replace(/\/$/, ''))
+  .filter(Boolean);
+
 const allowedOrigins = [
-  clientUrl,
+  ...parsedClientUrls,
   'http://localhost:5173',
   'http://127.0.0.1:5173'
-].filter(Boolean);
+];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin) return callback(null, true);
+    
+    const isAllowed = allowedOrigins.includes(origin) ||
+      allowedOrigins.some(allowed => allowed && (origin === allowed || origin.endsWith('.vercel.app')));
+
+    if (isAllowed) {
       return callback(null, true);
     }
-    return callback(new Error('Not allowed by CORS'));
+    return callback(new Error(`Not allowed by CORS: ${origin}`));
   },
   credentials: true
 }));
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', service: 'smart-civic-backend', timestamp: new Date().toISOString() });
+});
 
 app.use('/api/v1/complaints', complaintRoutes);
 app.use('/api/v1/authority', authorityRoutes);
