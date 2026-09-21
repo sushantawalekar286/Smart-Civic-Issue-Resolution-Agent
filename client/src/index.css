@@ -113,3 +113,14 @@ body {
   backdrop-filter: blur(8px);
   border: 1px solid rgba(241, 245, 249, 0.9);
 }
+
+/* Browser Autofill Text Visibility Fix */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #f8fafc !important;
+  -webkit-box-shadow: 0 0 0px 1000px #020617 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
