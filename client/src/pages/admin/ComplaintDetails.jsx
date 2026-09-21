@@ -19,7 +19,7 @@ const ComplaintDetails = () => {
         setLoading(true);
         setError('');
         const res = await adminAPI.getComplaintById(complaintId);
-        const data = res.data?.data || res.data || res.complaint || res;
+const data = res.data?.data || res.data || res.complaint || res;
         setComplaint(data);
       } catch (err) {
         setError(err.response?.data?.error || err.response?.data?.message || err.message || 'Failed to load complaint details');
@@ -32,7 +32,7 @@ const ComplaintDetails = () => {
       try {
         setActionsLoading(true);
         const res = await adminAPI.getComplaintAgentActions(complaintId);
-        const actions = res.actions || res.data?.actions || res.data || [];
+const actions = res.actions || res.data?.actions || res.data || [];
         setAgentActions(Array.isArray(actions) ? actions : []);
       } catch (err) {
         // Safe fallback if actions fail

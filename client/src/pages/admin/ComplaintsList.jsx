@@ -22,7 +22,7 @@ const ComplaintsList = () => {
   // Load departments once for filter dropdown
   useEffect(() => {
     adminAPI.getDepartments()
-      .then(res => {
+.then(res => {
         const list = res.data || res.departments || [];
         setDepartments(Array.isArray(list) ? list : []);
       })
