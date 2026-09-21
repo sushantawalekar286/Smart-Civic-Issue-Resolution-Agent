@@ -14,7 +14,7 @@ const setTokenCookie = (res, token) => {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite: isProduction ? 'none' : 'lax',
     path: '/',
   };
   res.cookie('jwt', token, options);
@@ -113,7 +113,7 @@ exports.logout = (req, res) => {
     expires: new Date(0),
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite: isProduction ? 'none' : 'lax',
     path: '/',
   });
   res.status(200).json({ success: true, message: 'Logged out successfully' });
