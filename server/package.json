@@ -22,7 +22,8 @@
     "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.1",
-    "multer": "^2.4.0"
+    "multer": "^2.4.0",
+    "cloudinary": "^2.11.0"
   },
   "devDependencies": {
     "jest": "^30.5.2",

@@ -22,7 +22,10 @@ const ComplaintsList = () => {
   // Load departments once for filter dropdown
   useEffect(() => {
     adminAPI.getDepartments()
-      .then(res => setDepartments(res.data.data || []))
+      .then(res => {
+        const list = res.data || res.departments || [];
+        setDepartments(Array.isArray(list) ? list : []);
+      })
       .catch(() => {});
   }, []);
 
@@ -41,10 +44,12 @@ const ComplaintsList = () => {
       };
 
       const res = await adminAPI.getComplaints(params);
-      setComplaints(res.data.complaints || []);
-      setPagination(res.data.pagination || { page: 1, limit: 10, total: 0, pages: 1 });
+      const items = res.complaints || res.data?.complaints || res.data || [];
+      const pag = res.pagination || res.data?.pagination || { page: 1, limit: 10, total: 0, pages: 1 };
+      setComplaints(Array.isArray(items) ? items : []);
+      setPagination(pag);
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to fetch complaints');
+      setError(err.response?.data?.error || err.response?.data?.message || err.message || 'Failed to fetch complaints');
     } finally {
       setLoading(false);
     }

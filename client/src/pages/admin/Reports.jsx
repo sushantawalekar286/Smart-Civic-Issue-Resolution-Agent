@@ -18,7 +18,7 @@ export default function Reports() {
 
   useEffect(() => {
     adminAPI.getDashboard()
-      .then(res => setDashboardData(res.data?.data || null))
+      .then(res => setDashboardData(res.data || res || null))
       .catch(err => console.error(err))
       .finally(() => setLoading(false));
   }, []);
