@@ -5,10 +5,10 @@ const adminService = require('../services/admin.service');
  */
 exports.getComplaints = async (req, res, next) => {
   try {
-    const { status, severity, issueType, departmentId, search, startDate, endDate, page, limit } = req.query;
+    const { status, severity, issueType, departmentId, search, startDate, endDate, page, limit, isOverdue } = req.query;
     
     const result = await adminService.getComplaints(
-      { status, severity, issueType, departmentId, search, startDate, endDate },
+      { status, severity, issueType, departmentId, search, startDate, endDate, isOverdue },
       { page, limit }
     );
 

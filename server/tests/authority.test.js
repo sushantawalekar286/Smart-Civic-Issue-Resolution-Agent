@@ -8,6 +8,14 @@ const User = require('../src/models/User');
 const Department = require('../src/models/Department');
 const Complaint = require('../src/models/Complaint');
 
+jest.mock('../src/services/storage.service', () => ({
+  uploadImage: jest.fn().mockResolvedValue({
+    url: 'http://res.cloudinary.com/demo/image/upload/sample.jpg',
+    publicId: 'sample'
+  }),
+  deleteImage: jest.fn().mockResolvedValue(true)
+}));
+
 describe('Authority Workflow and Status Management API', () => {
   let roadDept;
   let sanitationDept;
@@ -371,5 +379,48 @@ describe('Authority Workflow and Status Management API', () => {
 
     expect(res.statusCode).toBe(403);
     expect(res.body.error).toMatch(/another department/i);
+  });
+  // 17. Authority can submit resolution evidence successfully
+  it('17. should allow authority to submit resolution evidence and transition to RESOLVED', async () => {
+    const complaint = await createComplaintFixture(roadDept._id, 'IN_PROGRESS', {
+      assignedTo: roadAuthority._id
+    });
+
+    const res = await request(app)
+      .post(`/api/v1/authority/complaints/${complaint.complaintId}/resolution`)
+      .set('Cookie', [`jwt=${roadAuthorityToken}`])
+      .field('description', 'Pothole filled with asphalt and area cleaned up.')
+      .attach('image', Buffer.from('fake image content'), 'resolution.jpg');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.status).toBe('RESOLVED');
+    expect(res.body.data.resolutionEvidence).toBeDefined();
+    expect(res.body.data.resolutionEvidence.description).toBe('Pothole filled with asphalt and area cleaned up.');
+    expect(res.body.data.resolutionEvidence.imageUrl).toBeDefined();
+    expect(res.body.data.resolutionEvidence.submittedBy._id.toString()).toBe(roadAuthority._id.toString());
+  });
+
+  // 18. Authority missing required fields for resolution evidence gets 400
+  it('18. should reject resolution submission if missing description or image', async () => {
+    const complaint = await createComplaintFixture(roadDept._id, 'IN_PROGRESS', {
+      assignedTo: roadAuthority._id
+    });
+
+    const res1 = await request(app)
+      .post(`/api/v1/authority/complaints/${complaint.complaintId}/resolution`)
+      .set('Cookie', [`jwt=${roadAuthorityToken}`])
+      .attach('image', Buffer.from('fake image content'), 'resolution.jpg');
+      // No description
+
+    expect(res1.statusCode).toBe(400);
+
+    const res2 = await request(app)
+      .post(`/api/v1/authority/complaints/${complaint.complaintId}/resolution`)
+      .set('Cookie', [`jwt=${roadAuthorityToken}`])
+      .field('description', 'Pothole filled and fixed.');
+      // No image attached
+
+    expect(res2.statusCode).toBe(400);
   });
 });

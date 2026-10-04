@@ -82,3 +82,33 @@ exports.updateStatus = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * POST /api/v1/authority/complaints/:complaintId/resolution
+ * Submits resolution evidence and transitions state to RESOLVED
+ */
+exports.submitResolution = async (req, res, next) => {
+  try {
+    const { complaintId } = req.params;
+    const { description } = req.body;
+    const file = req.file;
+
+    const updatedComplaint = await authorityService.submitResolution(
+      complaintId,
+      req.user,
+      description,
+      file
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Resolution evidence submitted successfully',
+      data: updatedComplaint
+    });
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
+    next(error);
+  }
+};

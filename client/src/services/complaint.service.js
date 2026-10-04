@@ -12,6 +12,10 @@ export const complaintAPI = {
 
   getComplaintById: (id) => {
     return api.get(`/complaints/${id}`);
+  },
+
+  verifyResolution: (complaintId, payload) => {
+    return api.post(`/complaints/${complaintId}/verify-resolution`, payload);
   }
 };
 

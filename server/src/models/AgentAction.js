@@ -20,7 +20,11 @@ const agentActionSchema = new mongoose.Schema({
       "COMPLAINT_SUBMITTED",
       "STATUS_CHECKED",
       "FOLLOW_UP_INITIATED",
-      "ESCALATION_INITIATED"
+      "ESCALATION_INITIATED",
+      "OVERDUE_MARKED",
+      "RESOLUTION_EVIDENCE_SUBMITTED",
+      "RESOLUTION_CONFIRMED",
+      "RESOLUTION_REJECTED"
     ],
     required: true
   },

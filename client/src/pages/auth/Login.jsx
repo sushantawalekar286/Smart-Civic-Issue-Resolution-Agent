@@ -55,7 +55,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -70,7 +70,7 @@ const Login = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    
+
     try {
       const user = await login({ email, password });
       if (user.role === 'admin') navigate('/admin/dashboard');
@@ -84,7 +84,7 @@ const Login = () => {
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen text-slate-100 bg-[#0f172a] flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden font-sans"
       style={{
         backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 45%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 45%), radial-gradient(circle at 50% 80%, rgba(79, 70, 229, 0.1), transparent 50%)',
@@ -95,7 +95,7 @@ const Login = () => {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[140px] pointer-events-none"></div>
 
       <div className="max-w-6xl w-full grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-        
+
         {/* LEFT COLUMN: Branding & Demo Quick-Fill */}
         <div className="lg:col-span-6 space-y-6">
           <div className="flex items-center space-x-3">
@@ -110,7 +110,7 @@ const Login = () => {
 
           <div>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-              Sign In to Your <br/>
+              Sign In to Your <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-teal-300">
                 Civic Resolution Hub
               </span>
@@ -141,11 +141,10 @@ const Login = () => {
                     key={account.role}
                     type="button"
                     onClick={() => handleSelectDemo(account.email, account.password, account.role)}
-                    className={`text-left p-3 rounded-xl border transition-all duration-200 group flex flex-col justify-between ${
-                      isSelected 
-                        ? 'bg-indigo-600/30 border-indigo-500 shadow-md ring-1 ring-indigo-500/50' 
-                        : 'bg-slate-800/40 border-slate-700/60 hover:bg-slate-800/80 hover:border-slate-600'
-                    }`}
+                    className={`text-left p-3 rounded-xl border transition-all duration-200 group flex flex-col justify-between ${isSelected
+                      ? 'bg-indigo-600/30 border-indigo-500 shadow-md ring-1 ring-indigo-500/50'
+                      : 'bg-slate-800/40 border-slate-700/60 hover:bg-slate-800/80 hover:border-slate-600'
+                      }`}
                   >
                     <div className="flex items-center justify-between w-full mb-1">
                       <div className="flex items-center space-x-2 min-w-0">
@@ -187,22 +186,22 @@ const Login = () => {
         <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none">
           <GlassCard className="p-8 bg-slate-900/90 border-slate-800 shadow-2xl backdrop-blur-2xl">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-white tracking-tight">
+              <h2 className="text-2xl font-bold text-black tracking-tight">
                 Welcome Back
               </h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-slate-800">
                 Enter your details or select a demo account to sign in.
               </p>
             </div>
 
             {selectedRole && (
               <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-3 mb-5 flex items-center justify-between text-xs">
-                <div className="flex items-center space-x-2 text-indigo-300">
-                  <Check className="w-4 h-4 text-indigo-400 shrink-0" />
-                  <span>Selected: <strong className="text-white">{selectedRole}</strong></span>
+                <div className="flex items-center space-x-2 text-indigo-900">
+                  <Check className="w-4 h-4 text-indigo-900 shrink-0" />
+                  <span>Selected: <strong className="text-black">{selectedRole}</strong></span>
                 </div>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => { setSelectedRole(null); setEmail(''); setPassword(''); }}
                   className="text-slate-400 hover:text-white text-[11px] underline"
                 >
@@ -220,7 +219,7 @@ const Login = () => {
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-slate-900 mb-2">
                   Email Address
                 </label>
                 <GlassInput
@@ -235,12 +234,12 @@ const Login = () => {
                     if (selectedRole) setSelectedRole(null);
                   }}
                   placeholder="you@example.com"
-                  className="bg-slate-950/60 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500"
+                  className="bg-slate-950/60 border-slate-700 text-white placeholder-white-600 focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-slate-900 mb-2">
                   Password
                 </label>
                 <div className="relative">
@@ -256,7 +255,7 @@ const Login = () => {
                       if (selectedRole) setSelectedRole(null);
                     }}
                     placeholder="••••••••"
-                    className="bg-slate-950/60 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 pr-10"
+                    className="bg-slate-950/60 border-slate-700 text-white placeholder-white-600 focus:border-indigo-500 pr-10"
                   />
                   <button
                     type="button"
@@ -281,7 +280,7 @@ const Login = () => {
             </form>
 
             <div className="mt-8 pt-6 border-t border-slate-800 text-center">
-              <p className="text-slate-400 text-sm">
+              <p className="text-slate-500 text-sm">
                 Don't have an account?{' '}
                 <Link to="/register" className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
                   Create Citizen Account

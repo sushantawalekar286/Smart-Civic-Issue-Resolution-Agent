@@ -20,10 +20,10 @@ const Home = () => {
   };
 
   return (
-    <div 
-      className="min-h-screen text-slate-200 bg-[#0f172a]"
+    <div
+      className="min-h-screen text-slate-100 bg-slate-900"
       style={{
-        backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 40%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 40%), radial-gradient(circle at 50% 80%, rgba(79, 70, 229, 0.1), transparent 50%)',
+        backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 40%), radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.08), transparent 40%), radial-gradient(circle at 50% 80%, rgba(2, 132, 199, 0.05), transparent 50%)',
         backgroundAttachment: 'fixed'
       }}
     >
@@ -33,8 +33,8 @@ const Home = () => {
           <div className="flex lg:flex-1">
             <Link to="/" className="-m-1.5 p-1.5 flex items-center gap-2">
               <span className="sr-only">Smart Civic Issue Resolution Agent</span>
-              <div className="bg-indigo-500/20 p-2 rounded-xl backdrop-blur-md border border-white/10">
-                <Shield className="h-6 w-6 text-indigo-400" />
+              <div className="bg-sky-500/20 p-2 rounded-xl backdrop-blur-md border border-white/10">
+                <Shield className="h-6 w-6 text-sky-400" />
               </div>
               <span className="font-bold text-xl text-white tracking-tight">CivicAI</span>
             </Link>
@@ -62,18 +62,18 @@ const Home = () => {
         {/* Hero Section */}
         <div className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
           {/* Orbital gradients handled by global CSS, but add some specific highlights here */}
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-indigo-600/20 rounded-full blur-[120px] -z-10"></div>
-          
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-sky-600/10 rounded-full blur-[120px] -z-10"></div>
+
           <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
             <div className="mx-auto max-w-3xl text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-medium mb-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-sm font-medium mb-8">
                 <Brain className="w-4 h-4" />
                 <span>AI-Powered Civic Issue Resolution</span>
               </div>
               <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-white mb-8 drop-shadow-sm">
-                Smart Civic <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Resolution Agent</span>
+                Smart Civic <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-500">Resolution Agent</span>
               </h1>
-              <p className="mt-6 text-lg lg:text-xl leading-relaxed text-indigo-200/80 max-w-2xl mx-auto">
+              <p className="mt-6 text-lg lg:text-xl leading-relaxed text-slate-300 max-w-2xl mx-auto">
                 Report civic problems, let the AI analyze the issue, identify the responsible department, and track the complaint automatically.
               </p>
               <div className="mt-10 flex items-center justify-center gap-4">
@@ -94,15 +94,15 @@ const Home = () => {
         <div className="py-24 sm:py-32 relative">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
-              <h2 className="text-base font-semibold leading-7 text-indigo-400 uppercase tracking-widest">How It Works</h2>
+              <h2 className="text-base font-semibold leading-7 text-sky-400 uppercase tracking-widest">How It Works</h2>
               <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
                 A faster path to resolution
               </p>
-              <p className="mt-6 text-lg leading-8 text-gray-400">
+              <p className="mt-6 text-lg leading-8 text-slate-400">
                 Our platform uses AI to understand your issue, assign it the right severity, and route it to the exact department responsible for fixing it.
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
               {[
                 { title: '1. Report', icon: <Send />, desc: 'Provide details, photos, and location of the civic issue.' },
@@ -112,11 +112,11 @@ const Home = () => {
                 { title: '5. Resolve', icon: <Shield />, desc: 'Authorities fix the issue and close the complaint.' }
               ].map((step, idx) => (
                 <GlassCard key={idx} className="p-6 text-center hover:-translate-y-2 transition-transform duration-300">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 mb-6">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-500/20 border border-sky-500/30 text-sky-400 mb-6">
                     {step.icon}
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed">{step.desc}</p>
+                  <h3 className="text-lg font-bold text-black mb-2">{step.title}</h3>
+                  <p className="text-sm text-slate-800 leading-relaxed">{step.desc}</p>
                 </GlassCard>
               ))}
             </div>

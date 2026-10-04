@@ -212,3 +212,104 @@ describe('Citizen Complaint Retrieval & Isolation API', () => {
     expect(res.statusCode).toBe(401);
   });
 });
+
+describe('Citizen Resolution Verification API', () => {
+  let citizenAToken;
+  let citizenBToken;
+  let citizenA;
+  let citizenB;
+  let department;
+  let complaintA;
+
+  beforeEach(async () => {
+    const hash = await bcrypt.hash('password123', 10);
+
+    department = await Department.create({
+      code: `ROADS_${Date.now()}`,
+      name: 'Roads & Bridges Department',
+      issueTypes: ['Pothole']
+    });
+
+    citizenA = await User.create({
+      name: 'Citizen Alpha Verify',
+      email: `citizen_a_${Date.now()}_verify@test.local`,
+      passwordHash: hash,
+      role: 'citizen'
+    });
+
+    citizenB = await User.create({
+      name: 'Citizen Beta Verify',
+      email: `citizen_b_${Date.now()}_verify@test.local`,
+      passwordHash: hash,
+      role: 'citizen'
+    });
+
+    citizenAToken = jwt.sign({ id: citizenA._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
+    citizenBToken = jwt.sign({ id: citizenB._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
+
+    complaintA = await Complaint.create({
+      complaintId: `CIV-${Date.now()}-TEST02`,
+      citizenId: citizenA._id,
+      issueType: 'Pothole',
+      description: 'Dangerous pothole on Main Street.',
+      inputMethod: 'text',
+      location: { latitude: 18.5204, longitude: 73.8567, address: 'Main St' },
+      severity: 'HIGH',
+      departmentId: department._id,
+      status: 'RESOLVED',
+      resolutionEvidence: {
+        imageUrl: 'http://res.cloudinary.com/demo/image/upload/sample.jpg',
+        description: 'Fixed pothole',
+        submittedBy: citizenA._id, // Just mock it
+        submittedAt: new Date()
+      },
+      resolutionVerification: {
+        status: 'PENDING'
+      },
+      submittedAt: new Date()
+    });
+  });
+
+  it('citizen A can confirm resolution', async () => {
+    const res = await request(app)
+      .post(`/api/v1/complaints/${complaintA.complaintId}/verify-resolution`)
+      .set('Cookie', [`jwt=${citizenAToken}`])
+      .send({ isResolved: true });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.resolutionVerification.status).toBe('CONFIRMED');
+    expect(res.body.data.status).toBe('RESOLVED');
+  });
+
+  it('citizen A can reject resolution with a reason', async () => {
+    const res = await request(app)
+      .post(`/api/v1/complaints/${complaintA.complaintId}/verify-resolution`)
+      .set('Cookie', [`jwt=${citizenAToken}`])
+      .send({ isResolved: false, rejectionReason: 'Pothole is still there, poor job.' });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.resolutionVerification.status).toBe('REJECTED');
+    expect(res.body.data.resolutionVerification.rejectionReason).toBe('Pothole is still there, poor job.');
+    expect(res.body.data.status).toBe('IN_PROGRESS'); // Should be reopened
+  });
+
+  it('citizen B cannot verify citizen A complaint', async () => {
+    const res = await request(app)
+      .post(`/api/v1/complaints/${complaintA.complaintId}/verify-resolution`)
+      .set('Cookie', [`jwt=${citizenBToken}`])
+      .send({ isResolved: true });
+
+    expect(res.statusCode).toBe(403);
+  });
+
+  it('citizen A cannot reject without a valid reason', async () => {
+    const res = await request(app)
+      .post(`/api/v1/complaints/${complaintA.complaintId}/verify-resolution`)
+      .set('Cookie', [`jwt=${citizenAToken}`])
+      .send({ isResolved: false, rejectionReason: 'Bad' });
+
+    expect(res.statusCode).toBe(400);
+  });
+});

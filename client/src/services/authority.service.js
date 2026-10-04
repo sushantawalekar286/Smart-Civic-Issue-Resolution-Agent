@@ -11,6 +11,14 @@ export const authorityAPI = {
 
   updateComplaintStatus: (complaintId, payload) => {
     return api.patch(`/authority/complaints/${complaintId}/status`, payload);
+  },
+
+  submitResolution: (complaintId, formData) => {
+    return api.post(`/authority/complaints/${complaintId}/resolution`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
   }
 };
 

@@ -8,7 +8,8 @@ const AgentAction = require('../../models/AgentAction');
  */
 const getDefaultThresholds = () => ({
   followUpThresholdHours: parseFloat(process.env.FOLLOW_UP_THRESHOLD_HOURS) || 24,
-  escalationThresholdHours: parseFloat(process.env.ESCALATION_THRESHOLD_HOURS) || 48
+  escalationThresholdHours: parseFloat(process.env.ESCALATION_THRESHOLD_HOURS) || 48,
+  overdueThresholdHours: parseFloat(process.env.OVERDUE_THRESHOLD_HOURS) || 48
 });
 
 /**
@@ -23,6 +24,7 @@ const processSingleComplaint = async (complaint, options = {}) => {
   const defaults = getDefaultThresholds();
   const followUpHours = options.followUpThresholdHours ?? defaults.followUpThresholdHours;
   const escalationHours = options.escalationThresholdHours ?? defaults.escalationThresholdHours;
+  const overdueHours = options.overdueThresholdHours ?? defaults.overdueThresholdHours;
 
   // Never process resolved complaints
   if (complaint.status === 'RESOLVED') {
@@ -101,7 +103,55 @@ const processSingleComplaint = async (complaint, options = {}) => {
     };
   }
 
-  // 2. FOLLOW-UP CHECK (24h+)
+  // 2. OVERDUE CHECK (48h+)
+  // Trigger overdue if elapsed time reached and not yet triggered for this complaint
+  const isEligibleForOverdue =
+    elapsedHours >= overdueHours &&
+    !complaint.overdue?.isOverdue &&
+    complaint.status !== 'RESOLVED';
+
+  if (isEligibleForOverdue) {
+    complaint.overdue = {
+      isOverdue: true,
+      overdueAt: new Date()
+    };
+
+    if (complaint.severity === 'LOW' || complaint.severity === 'MEDIUM') {
+      complaint.severity = 'HIGH';
+    }
+
+    complaint.statusHistory.push({
+      status: complaint.status,
+      changedBy: null,
+      changedByRole: 'agent',
+      note: `Complaint marked as overdue (unresolved for ${elapsedHours.toFixed(1)} hours). Priority set to HIGH.`,
+      timestamp: new Date()
+    });
+
+    await complaint.save();
+
+    const agentAction = await AgentAction.create({
+      complaintId: complaint._id,
+      actionType: 'OVERDUE_MARKED',
+      result: 'Complaint marked as overdue and priority elevated to HIGH.',
+      reason: `Complaint remained unresolved beyond the ${overdueHours}h overdue threshold.`,
+      metadata: {
+        elapsedHours: parseFloat(elapsedHours.toFixed(2)),
+        newSeverity: complaint.severity,
+        currentStatus: complaint.status
+      },
+      timestamp: new Date()
+    });
+
+    return {
+      complaintId: complaint.complaintId,
+      actionTaken: 'OVERDUE_MARKED',
+      actionId: agentAction._id,
+      elapsedHours: parseFloat(elapsedHours.toFixed(2))
+    };
+  }
+
+  // 3. FOLLOW-UP CHECK (24h+)
   // Trigger follow-up if elapsed time reached and not yet triggered for this complaint
   const isEligibleForFollowUp =
     elapsedHours >= followUpHours &&

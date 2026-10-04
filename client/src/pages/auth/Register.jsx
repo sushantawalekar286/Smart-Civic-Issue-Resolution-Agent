@@ -49,7 +49,7 @@ const Register = () => {
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen text-slate-100 bg-[#0f172a] flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden font-sans"
       style={{
         backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 45%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 45%), radial-gradient(circle at 50% 80%, rgba(79, 70, 229, 0.1), transparent 50%)',
@@ -60,7 +60,7 @@ const Register = () => {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[140px] pointer-events-none"></div>
 
       <div className="max-w-6xl w-full grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-        
+
         {/* LEFT COLUMN: Branding & Perks */}
         <div className="lg:col-span-6 space-y-6">
           <div className="flex items-center space-x-3">
@@ -102,10 +102,10 @@ const Register = () => {
         <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none">
           <GlassCard className="p-8 bg-slate-900/90 border-slate-800 shadow-2xl backdrop-blur-2xl">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-white tracking-tight">
+              <h2 className="text-2xl font-bold text-black tracking-tight">
                 Create Citizen Account
               </h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-slate-800">
                 Fill in your details below to get started
               </p>
             </div>
@@ -120,7 +120,7 @@ const Register = () => {
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">First Name</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-900 mb-2">First Name</label>
                   <GlassInput
                     name="firstName"
                     type="text"
@@ -128,11 +128,11 @@ const Register = () => {
                     value={formData.firstName}
                     onChange={handleChange}
                     placeholder="John"
-                    className="bg-slate-950/60 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500"
+                    className="bg-slate-950/60 border-slate-700 text-white placeholder-white-600 focus:border-indigo-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Last Name</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-900 mb-2">Last Name</label>
                   <GlassInput
                     name="lastName"
                     type="text"
@@ -140,13 +140,13 @@ const Register = () => {
                     value={formData.lastName}
                     onChange={handleChange}
                     placeholder="Doe"
-                    className="bg-slate-950/60 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500"
+                    className="bg-slate-950/60 border-slate-700 text-white placeholder-white-600 focus:border-indigo-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Email address</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-900 mb-2">Email address</label>
                 <GlassInput
                   name="email"
                   type="email"
@@ -154,12 +154,12 @@ const Register = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  className="bg-slate-950/60 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500"
+                  className="bg-slate-950/60 border-slate-700 text-white placeholder-white-600 focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Password</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-900 mb-2">Password</label>
                 <div className="relative">
                   <GlassInput
                     name="password"
@@ -168,7 +168,7 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="bg-slate-950/60 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 pr-10"
+                    className="bg-slate-950/60 border-slate-700 text-white placeholder-white-600 focus:border-indigo-500 pr-10"
                   />
                   <button
                     type="button"
@@ -181,7 +181,7 @@ const Register = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Confirm Password</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-900 mb-2">Confirm Password</label>
                 <div className="relative">
                   <GlassInput
                     name="confirmPassword"
@@ -190,7 +190,7 @@ const Register = () => {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="bg-slate-950/60 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500"
+                    className="bg-slate-950/60 border-slate-700 text-white placeholder-white-600 focus:border-indigo-500"
                   />
                 </div>
               </div>
@@ -203,7 +203,7 @@ const Register = () => {
             </form>
 
             <div className="mt-8 pt-6 border-t border-slate-800 text-center">
-              <p className="text-slate-400 text-sm">
+              <p className="text-slate-900 text-sm">
                 Already have an account?{' '}
                 <Link to="/login" className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
                   Sign in

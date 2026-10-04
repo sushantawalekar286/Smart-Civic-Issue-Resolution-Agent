@@ -87,6 +87,11 @@ const actions = res.actions || res.data?.actions || res.data || [];
         <div className="flex items-center space-x-3">
           <StatusBadge status={complaint.status} />
           <SeverityBadge severity={complaint.severity} />
+          {complaint.overdue?.isOverdue && (
+            <span className="text-xs font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded uppercase border border-rose-200">
+              🚨 Overdue
+            </span>
+          )}
           <span className="text-xs font-semibold text-slate-500 font-mono bg-slate-100 px-2 py-0.5 rounded">
             Type: {complaint.issueType}
           </span>
@@ -106,6 +111,55 @@ const actions = res.actions || res.data?.actions || res.data || [];
             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Issue Description</h2>
             <p className="text-slate-800 text-sm leading-relaxed whitespace-pre-wrap">{complaint.description}</p>
           </div>
+
+          {/* Resolution Evidence Card */}
+          {complaint.resolutionEvidence && complaint.resolutionEvidence.imageUrl && (
+            <div className="bg-emerald-50 p-6 rounded-xl border border-emerald-200 shadow-xs relative overflow-hidden">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-emerald-900 flex items-center">
+                  <span className="mr-2">✓</span> Resolution Evidence
+                </h2>
+                {complaint.resolutionVerification && (
+                  <div className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${
+                    complaint.resolutionVerification.status === 'CONFIRMED' 
+                      ? 'bg-emerald-100 text-emerald-800 border-emerald-200' 
+                      : complaint.resolutionVerification.status === 'REJECTED'
+                      ? 'bg-rose-100 text-rose-800 border-rose-200'
+                      : 'bg-amber-100 text-amber-800 border-amber-200'
+                  }`}>
+                    {complaint.resolutionVerification.status === 'PENDING' ? 'AWAITING VERIFICATION' 
+                     : complaint.resolutionVerification.status === 'CONFIRMED' ? 'CITIZEN CONFIRMED' 
+                     : 'CITIZEN REJECTED'}
+                  </div>
+                )}
+              </div>
+              
+              {complaint.resolutionVerification?.status === 'REJECTED' && (
+                <div className="bg-rose-50 border border-rose-200 text-rose-800 text-xs px-4 py-3 rounded-xl mb-4 font-medium">
+                  <strong>Issue Reopened:</strong> {complaint.resolutionVerification.rejectionReason}
+                </div>
+              )}
+
+              <div className="space-y-4">
+                <div className="p-4 rounded-xl bg-white border border-emerald-100">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Resolution Description</h4>
+                  <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                    {complaint.resolutionEvidence.description}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Completion Photo</h4>
+                  <a href={complaint.resolutionEvidence.imageUrl} target="_blank" rel="noopener noreferrer" className="block max-w-sm rounded-xl overflow-hidden border border-emerald-200">
+                    <img src={complaint.resolutionEvidence.imageUrl} alt="Resolution" className="w-full h-48 object-cover" />
+                  </a>
+                </div>
+                <div className="text-[10px] font-medium text-slate-500 flex justify-between">
+                  <span>By: {complaint.resolutionEvidence.submittedBy?.name || 'Authority'}</span>
+                  <span>{new Date(complaint.resolutionEvidence.submittedAt).toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Evidence Photos */}
           {complaint.evidence && complaint.evidence.length > 0 && (
@@ -274,6 +328,17 @@ const actions = res.actions || res.data?.actions || res.data || [];
           <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">SLA Tracking Status</h2>
             <div className="space-y-3 text-xs">
+              <div className="flex justify-between items-center py-1 border-b border-slate-100">
+                <span className="text-slate-500">Overdue Status:</span>
+                <span className={`font-bold ${complaint.overdue?.isOverdue ? 'text-rose-600' : 'text-slate-800'}`}>
+                  {complaint.overdue?.isOverdue ? 'Overdue (>48h)' : 'Normal'}
+                </span>
+              </div>
+              {complaint.overdue?.overdueAt && (
+                <div className="text-[11px] text-slate-500 pb-2 border-b border-slate-100">
+                  Marked Overdue: {new Date(complaint.overdue.overdueAt).toLocaleString()}
+                </div>
+              )}
               <div className="flex justify-between items-center py-1 border-b border-slate-100">
                 <span className="text-slate-500">Follow-up Triggers:</span>
                 <span className="font-bold text-slate-800">{complaint.followUp?.count || 0}</span>

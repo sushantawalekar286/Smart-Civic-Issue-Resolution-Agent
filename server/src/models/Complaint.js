@@ -259,6 +259,33 @@ const complaintSchema = new mongoose.Schema({
       default: null
     }
   },
+  overdue: {
+    isOverdue: {
+      type: Boolean,
+      default: false
+    },
+    overdueAt: {
+      type: Date,
+      default: null
+    }
+  },
+  resolutionEvidence: {
+    imageUrl: { type: String, default: null },
+    publicId: { type: String, default: null },
+    description: { type: String, default: "" },
+    submittedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    submittedAt: { type: Date, default: null }
+  },
+  resolutionVerification: {
+    status: {
+      type: String,
+      enum: ["PENDING", "CONFIRMED", "REJECTED"],
+      default: "PENDING"
+    },
+    verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    verifiedAt: { type: Date, default: null },
+    rejectionReason: { type: String, default: "" }
+  },
   submittedAt: {
     type: Date,
     default: null

@@ -248,6 +248,85 @@ class ComplaintSubmissionService {
       }
     };
   }
+
+  /**
+   * Citizen verifies or rejects a resolved complaint
+   */
+  async verifyResolution(complaintId, citizenId, isResolved, rejectionReason) {
+    let complaint = await Complaint.findOne({ complaintId });
+
+    if (!complaint && mongoose.Types.ObjectId.isValid(complaintId)) {
+      complaint = await Complaint.findById(complaintId);
+    }
+
+    if (!complaint) {
+      const error = new Error('Complaint not found');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    if (!complaint.citizenId.equals(citizenId)) {
+      const error = new Error('You can only verify your own complaints');
+      error.statusCode = 403;
+      throw error;
+    }
+
+    if (complaint.status !== 'RESOLVED' || !complaint.resolutionEvidence || !complaint.resolutionEvidence.imageUrl) {
+      const error = new Error('Complaint does not have resolution evidence to verify');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    if (complaint.resolutionVerification && complaint.resolutionVerification.status !== 'PENDING') {
+      const error = new Error('Complaint resolution has already been verified');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const verificationStatus = isResolved ? 'CONFIRMED' : 'REJECTED';
+    
+    complaint.resolutionVerification = {
+      status: verificationStatus,
+      verifiedBy: citizenId,
+      verifiedAt: new Date(),
+      rejectionReason: isResolved ? '' : rejectionReason.trim()
+    };
+
+    if (!isResolved) {
+      // Reopen the issue. Move status back to IN_PROGRESS so authorities can handle it again.
+      complaint.status = 'IN_PROGRESS';
+      complaint.statusHistory.push({
+        status: 'IN_PROGRESS',
+        changedBy: citizenId,
+        changedByRole: 'citizen',
+        note: `Citizen rejected resolution: ${rejectionReason.trim()}`,
+        timestamp: new Date()
+      });
+    } else {
+      complaint.statusHistory.push({
+        status: 'RESOLVED',
+        changedBy: citizenId,
+        changedByRole: 'citizen',
+        note: `Citizen confirmed resolution.`,
+        timestamp: new Date()
+      });
+    }
+
+    await complaint.save();
+
+    // Create an audit trail (AgentAction)
+    await AgentAction.create({
+      complaintId: complaint._id,
+      actionType: isResolved ? 'RESOLUTION_CONFIRMED' : 'RESOLUTION_REJECTED',
+      result: isResolved ? 'Resolution Confirmed' : 'Resolution Rejected',
+      reason: isResolved ? 'Citizen confirmed resolution.' : `Citizen rejected resolution: ${rejectionReason.trim()}`,
+      metadata: {
+        verifiedBy: citizenId
+      }
+    });
+
+    return complaint;
+  }
 }
 
 module.exports = new ComplaintSubmissionService();

@@ -61,3 +61,20 @@ exports.validateComplaintQuery = [
 
   handleValidationErrors
 ];
+
+exports.validateResolution = [
+  body('description')
+    .notEmpty().withMessage('Resolution description is required')
+    .isString().withMessage('Description must be a string')
+    .trim()
+    .isLength({ min: 10, max: 1000 }).withMessage('Description must be between 10 and 1000 characters'),
+    
+  (req, res, next) => {
+    if (!req.file) {
+      return res.status(400).json({ error: 'Resolution image is required' });
+    }
+    next();
+  },
+
+  handleValidationErrors
+];

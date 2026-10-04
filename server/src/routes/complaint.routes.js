@@ -55,4 +55,11 @@ router.get('/:complaintId/agent-actions', protect, authorize('authority', 'admin
  */
 router.get('/:complaintId', protect, complaintController.getComplaintById);
 
+/**
+ * @route POST /api/v1/complaints/:complaintId/verify-resolution
+ * @desc Verify resolution of a complaint
+ * @access Private (Citizen owner)
+ */
+router.post('/:complaintId/verify-resolution', protect, authorize('citizen'), complaintController.verifyResolution);
+
 module.exports = router;

@@ -193,6 +193,64 @@ const AuthorityComplaintDetails = () => {
               )}
             </div>
 
+            {/* Resolution Evidence Card */}
+            {complaint.resolutionEvidence && complaint.resolutionEvidence.imageUrl && (
+              <div className="bg-white rounded-2xl border border-emerald-200 p-6 shadow-xs relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
+                
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 relative">
+                  <div className="flex items-center gap-2 mb-2 sm:mb-0">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                      <ShieldCheck className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-emerald-900">✓ Resolution Evidence</h3>
+                    </div>
+                  </div>
+                  
+                  {complaint.resolutionVerification && (
+                    <div className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${
+                      complaint.resolutionVerification.status === 'CONFIRMED' 
+                        ? 'bg-emerald-100 text-emerald-800 border-emerald-200' 
+                        : complaint.resolutionVerification.status === 'REJECTED'
+                        ? 'bg-rose-100 text-rose-800 border-rose-200'
+                        : 'bg-amber-100 text-amber-800 border-amber-200'
+                    }`}>
+                      {complaint.resolutionVerification.status === 'PENDING' ? 'AWAITING CITIZEN VERIFICATION' 
+                       : complaint.resolutionVerification.status === 'CONFIRMED' ? 'CITIZEN CONFIRMED' 
+                       : 'CITIZEN REJECTED'}
+                    </div>
+                  )}
+                </div>
+
+                {complaint.resolutionVerification?.status === 'REJECTED' && (
+                  <div className="bg-rose-50 border border-rose-200 text-rose-800 text-xs px-4 py-3 rounded-xl mb-4 font-medium relative z-10">
+                    <strong>Citizen reported issue still exists:</strong> {complaint.resolutionVerification.rejectionReason}
+                  </div>
+                )}
+
+                <div className="relative z-10 space-y-4">
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Resolution Description</h4>
+                    <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                      {complaint.resolutionEvidence.description}
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Completion Photo</h4>
+                    <a href={complaint.resolutionEvidence.imageUrl} target="_blank" rel="noopener noreferrer" className="block max-w-sm rounded-xl overflow-hidden border border-slate-200 hover:border-emerald-400 transition-colors">
+                      <img src={complaint.resolutionEvidence.imageUrl} alt="Resolution" className="w-full h-48 object-cover" />
+                    </a>
+                  </div>
+                  <div className="text-[10px] font-medium text-slate-400 flex justify-between">
+                    <span>By: {complaint.resolutionEvidence.submittedBy?.name || 'Authority'}</span>
+                    <span>{new Date(complaint.resolutionEvidence.submittedAt).toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Attached Evidence Card */}
             <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
               <div className="flex items-center justify-between mb-4">

@@ -62,6 +62,8 @@ export default function AdminDashboard() {
   const inProgressCount = complaints.inProgress || 0;
   const resolvedCount = complaints.resolved || 0;
   const escalatedCount = complaints.escalated || 0;
+  const overdueCount = complaints.overdue || 0;
+  const highPriorityCount = (complaints.severity?.HIGH || 0) + (complaints.severity?.CRITICAL || 0);
 
   // Completion percentage
   const completionRate = totalComplaints > 0
@@ -122,12 +124,46 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* 2. Top 4 Statistics Cards matching Reference */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {/* 1.5 Overdue Alert Section */}
+        {overdueCount > 0 ? (
+          <div className="bg-rose-50 border border-rose-200 rounded-2xl p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-rose-900 font-bold text-lg flex items-center gap-2">
+                  🚨 Overdue Complaints
+                </h3>
+                <p className="text-rose-700 text-sm font-medium mt-0.5">
+                  <strong className="font-bold">{overdueCount}</strong> complaints have not been resolved within 48 hours.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/admin/complaints?isOverdue=true"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm transition whitespace-nowrap"
+            >
+              <span>View Overdue Complaints</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        ) : (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 shadow-xs flex items-center gap-3">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <div>
+              <h3 className="text-emerald-900 font-bold text-sm">✓ No overdue complaints</h3>
+              <p className="text-emerald-700 text-xs font-medium">All active complaints are currently within their expected resolution time.</p>
+            </div>
+          </div>
+        )}
+
+        {/* 2. Top 6 Statistics Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           {/* Total Complaints */}
           <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 Total Complaints
               </span>
               <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -139,7 +175,7 @@ export default function AdminDashboard() {
                 {totalComplaints}
               </span>
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
+            <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-semibold text-emerald-600">
               <TrendingUp className="w-3.5 h-3.5" />
               <span>Real-time intake stream</span>
             </div>
@@ -148,7 +184,7 @@ export default function AdminDashboard() {
           {/* Pending / Unresolved */}
           <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 Pending Triage
               </span>
               <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -160,7 +196,7 @@ export default function AdminDashboard() {
                 {pendingCount}
               </span>
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600">
+            <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-semibold text-amber-600">
               <span>{complaints.unresolved || pendingCount} awaiting field action</span>
             </div>
           </div>
@@ -168,7 +204,7 @@ export default function AdminDashboard() {
           {/* In Progress */}
           <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 In Progress
               </span>
               <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -180,15 +216,55 @@ export default function AdminDashboard() {
                 {inProgressCount}
               </span>
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-indigo-600">
+            <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-semibold text-indigo-600">
               <span>Active departmental work</span>
+            </div>
+          </div>
+
+          {/* Overdue */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                Overdue
+              </span>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+            </div>
+            <div className="mt-3">
+              <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                {overdueCount}
+              </span>
+            </div>
+            <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-semibold text-rose-600">
+              <span>Exceeded 48h limit</span>
+            </div>
+          </div>
+
+          {/* High Priority */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                High Priority
+              </span>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+            </div>
+            <div className="mt-3">
+              <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                {highPriorityCount}
+              </span>
+            </div>
+            <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-semibold text-orange-600">
+              <span>Urgent civic issues</span>
             </div>
           </div>
 
           {/* Resolved */}
           <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 Resolved
               </span>
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -200,7 +276,7 @@ export default function AdminDashboard() {
                 {resolvedCount}
               </span>
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
+            <div className="mt-2.5 flex items-center gap-1.5 text-[10px] font-semibold text-emerald-600">
               <span>{completionRate}% overall resolution rate</span>
             </div>
           </div>

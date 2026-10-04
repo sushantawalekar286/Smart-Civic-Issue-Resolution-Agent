@@ -26,6 +26,9 @@ const ComplaintStatusControl = ({ complaint, onStatusUpdated }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
 
   const handleSelectTransition = (target) => {
     setSelectedTarget(target);
@@ -44,28 +47,64 @@ const ComplaintStatusControl = ({ complaint, onStatusUpdated }) => {
     setSelectedTarget(null);
     setNote('');
     setError('');
+    setSelectedFile(null);
+    setPreviewUrl('');
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image must be less than 5MB');
+        return;
+      }
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      setError('');
+    }
   };
 
   const handleConfirmTransition = async (e) => {
     e.preventDefault();
     if (!selectedTarget) return;
 
-    if (selectedTarget.status === 'RESOLVED' && (!note || note.trim().length < 5)) {
-      setError('A resolution note of at least 5 characters is required.');
-      return;
+    if (selectedTarget.status === 'RESOLVED') {
+      if (!note || note.trim().length < 5) {
+        setError('A resolution description of at least 10 characters is required.');
+        return;
+      }
+      if (!selectedFile) {
+        setError('A resolution image/photo is required to mark as resolved.');
+        return;
+      }
     }
 
     try {
       setLoading(true);
       setError('');
-      const res = await authorityAPI.updateComplaintStatus(complaint.complaintId, {
-        status: selectedTarget.status,
-        note: note.trim()
-      });
+      
+      let res;
+      if (selectedTarget.status === 'RESOLVED') {
+        // Use the new resolution submission endpoint
+        const formData = new FormData();
+        formData.append('description', note.trim());
+        formData.append('image', selectedFile);
+
+        res = await authorityAPI.submitResolution(complaint.complaintId, formData);
+      } else {
+        // Use the generic status update endpoint for other statuses
+        res = await authorityAPI.updateComplaintStatus(complaint.complaintId, {
+          status: selectedTarget.status,
+          note: note.trim()
+        });
+      }
 
       setSuccessMsg(`Status successfully updated to ${selectedTarget.status}`);
       setSelectedTarget(null);
       setNote('');
+      setSelectedFile(null);
+      setPreviewUrl('');
       if (onStatusUpdated) {
         onStatusUpdated(res.data.data);
       }
@@ -213,6 +252,40 @@ const ComplaintStatusControl = ({ complaint, onStatusUpdated }) => {
               marginBottom: '16px'
             }}
           />
+
+          {selectedTarget.status === 'RESOLVED' && (
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontWeight: 500, fontSize: '13px', color: '#334155', marginBottom: '6px' }}>
+                Resolution Evidence Photo <span style={{ color: '#ef4444' }}>* (required)</span>:
+              </label>
+              
+              {!previewUrl ? (
+                <div style={{ border: '2px dashed #cbd5e1', padding: '20px', textAlign: 'center', borderRadius: '8px', backgroundColor: '#f8fafc' }}>
+                  <input 
+                    type="file" 
+                    accept="image/jpeg, image/png, image/webp" 
+                    onChange={handleFileChange}
+                    style={{ fontSize: '13px', color: '#475569' }}
+                    id="resolution-upload"
+                  />
+                  <div style={{ fontSize: '12px', color: '#64748b', marginTop: '8px' }}>
+                    Supported formats: JPEG, PNG, WEBP (Max 5MB)
+                  </div>
+                </div>
+              ) : (
+                <div style={{ position: 'relative', border: '1px solid #cbd5e1', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#000', display: 'flex', justifyContent: 'center' }}>
+                  <img src={previewUrl} alt="Resolution preview" style={{ maxHeight: '200px', objectFit: 'contain' }} />
+                  <button 
+                    type="button" 
+                    onClick={() => { setSelectedFile(null); setPreviewUrl(''); }}
+                    style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: '4px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <button

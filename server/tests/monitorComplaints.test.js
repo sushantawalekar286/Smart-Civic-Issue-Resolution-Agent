@@ -205,16 +205,18 @@ describe('Agentic Monitoring, Follow-up & Escalation Service', () => {
 
     // Cycle 1
     const res1 = await processSingleComplaint(complaint, {
-      followUpThresholdHours: 24,
-      escalationThresholdHours: 48
+      followUpThresholdHours: 999,
+      escalationThresholdHours: 48,
+      overdueThresholdHours: 999
     });
     expect(res1.actionTaken).toBe('ESCALATION_INITIATED');
 
     // Cycle 2
     const updatedComplaint = await Complaint.findById(complaint._id);
     const res2 = await processSingleComplaint(updatedComplaint, {
-      followUpThresholdHours: 24,
-      escalationThresholdHours: 48
+      followUpThresholdHours: 999,
+      escalationThresholdHours: 48,
+      overdueThresholdHours: 999
     });
     expect(res2.actionTaken).toBeNull();
 
@@ -291,6 +293,76 @@ describe('Agentic Monitoring, Follow-up & Escalation Service', () => {
 
     const actionTypes = scanResult.details.map(d => d.actionTaken).sort();
     expect(actionTypes).toEqual(['ESCALATION_INITIATED', 'FOLLOW_UP_INITIATED']);
+  });
+
+  it('9. should mark a complaint as overdue and set priority to HIGH at overdueThresholdHours (48h)', async () => {
+    // 50 hours old, status is SUBMITTED, severity is LOW initially
+    const complaint = await createTestComplaint({ severity: 'LOW' }, 50);
+
+    const result = await processSingleComplaint(complaint, {
+      followUpThresholdHours: 24,
+      escalationThresholdHours: 72, // Delay escalation to see overdue happen first
+      overdueThresholdHours: 48
+    });
+
+    expect(result.actionTaken).toBe('OVERDUE_MARKED');
+
+    const fresh = await Complaint.findById(complaint._id);
+    expect(fresh.overdue.isOverdue).toBe(true);
+    expect(fresh.overdue.overdueAt).toBeDefined();
+    expect(fresh.severity).toBe('HIGH');
+    
+    // Status history entry exists
+    const lastHistory = fresh.statusHistory[fresh.statusHistory.length - 1];
+    expect(lastHistory.note).toContain('marked as overdue');
+    
+    // Agent action exists
+    const actions = await AgentAction.find({ complaintId: complaint._id });
+    expect(actions.length).toBe(1);
+    expect(actions[0].actionType).toBe('OVERDUE_MARKED');
+  });
+
+  it('10. should prevent duplicate overdue marks in repeated monitoring cycles', async () => {
+    const complaint = await createTestComplaint({ severity: 'LOW' }, 50);
+
+    // Cycle 1
+    const res1 = await processSingleComplaint(complaint, {
+      followUpThresholdHours: 999,
+      escalationThresholdHours: 999,
+      overdueThresholdHours: 48
+    });
+    expect(res1.actionTaken).toBe('OVERDUE_MARKED');
+
+    // Cycle 2
+    const updatedComplaint = await Complaint.findById(complaint._id);
+    const res2 = await processSingleComplaint(updatedComplaint, {
+      followUpThresholdHours: 999,
+      escalationThresholdHours: 999,
+      overdueThresholdHours: 48
+    });
+    expect(res2.actionTaken).toBeNull(); // No action in cycle 2
+
+    const fresh = await Complaint.findById(complaint._id);
+    expect(fresh.overdue.isOverdue).toBe(true);
+
+    const actions = await AgentAction.find({ complaintId: complaint._id });
+    expect(actions.length).toBe(1); // Still only 1 overdue record
+  });
+
+  it('11. should not mark resolved complaint as overdue', async () => {
+    const complaint = await createTestComplaint({ status: 'RESOLVED', severity: 'LOW' }, 50);
+
+    const result = await processSingleComplaint(complaint, {
+      followUpThresholdHours: 24,
+      escalationThresholdHours: 72,
+      overdueThresholdHours: 48
+    });
+
+    expect(result.actionTaken).toBeNull();
+
+    const fresh = await Complaint.findById(complaint._id);
+    expect(fresh.overdue.isOverdue).toBe(false);
+    expect(fresh.severity).toBe('LOW'); // unchanged
   });
 
   describe('Admin / Authority Visibility API: GET /api/v1/complaints/:complaintId/agent-actions', () => {

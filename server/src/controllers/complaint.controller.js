@@ -273,3 +273,46 @@ exports.getComplaintAgentActions = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * POST /api/v1/complaints/:complaintId/verify-resolution
+ * Citizen verifies or rejects the resolution evidence
+ */
+exports.verifyResolution = async (req, res, next) => {
+  try {
+    const { complaintId } = req.params;
+    const { isResolved, rejectionReason } = req.body;
+
+    if (isResolved === undefined) {
+      return res.status(400).json({
+        success: false,
+        error: 'isResolved flag is required (boolean).'
+      });
+    }
+
+    if (!isResolved && (!rejectionReason || typeof rejectionReason !== 'string' || rejectionReason.trim().length < 5)) {
+      return res.status(400).json({
+        success: false,
+        error: 'A rejection reason of at least 5 characters is required if the issue is not resolved.'
+      });
+    }
+
+    const complaint = await complaintSubmissionService.verifyResolution(
+      complaintId,
+      req.user._id,
+      isResolved,
+      rejectionReason
+    );
+
+    res.status(200).json({
+      success: true,
+      message: isResolved ? 'Resolution confirmed.' : 'Resolution rejected, issue reopened.',
+      data: complaint
+    });
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
+    next(error);
+  }
+};

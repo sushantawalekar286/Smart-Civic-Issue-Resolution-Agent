@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import adminAPI from '../../services/admin.service';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { StatusBadge, SeverityBadge } from '../../components/admin/AdminBadges';
@@ -17,6 +17,12 @@ const ComplaintsList = () => {
   const [severity, setSeverity] = useState('');
   const [issueType, setIssueType] = useState('');
   const [departmentId, setDepartmentId] = useState('');
+  
+  const location = useLocation();
+  const [isOverdue, setIsOverdue] = useState(() => {
+    return new URLSearchParams(location.search).get('isOverdue') === 'true';
+  });
+
   const [page, setPage] = useState(1);
 
   // Load departments once for filter dropdown
@@ -40,7 +46,8 @@ const ComplaintsList = () => {
         ...(status && { status }),
         ...(severity && { severity }),
         ...(issueType && { issueType }),
-        ...(departmentId && { departmentId })
+        ...(departmentId && { departmentId }),
+        ...(isOverdue && { isOverdue: true })
       };
 
       const res = await adminAPI.getComplaints(params);
@@ -57,7 +64,7 @@ const ComplaintsList = () => {
 
   useEffect(() => {
     fetchComplaints();
-  }, [page, status, severity, issueType, departmentId]);
+  }, [page, status, severity, issueType, departmentId, isOverdue]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -71,6 +78,7 @@ const ComplaintsList = () => {
     setSeverity('');
     setIssueType('');
     setDepartmentId('');
+    setIsOverdue(false);
     setPage(1);
   };
 
@@ -158,6 +166,19 @@ const ComplaintsList = () => {
               ))}
             </select>
           </div>
+
+          {/* Overdue Filter Toggle */}
+          <div className="flex items-end">
+            <label className="flex items-center gap-2 cursor-pointer mb-2">
+              <input
+                type="checkbox"
+                checked={isOverdue}
+                onChange={(e) => { setIsOverdue(e.target.checked); setPage(1); }}
+                className="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500"
+              />
+              <span className="text-[11px] font-semibold text-slate-700 uppercase">Show Overdue Only</span>
+            </label>
+          </div>
         </form>
 
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-xs">
@@ -226,17 +247,22 @@ const ComplaintsList = () => {
                     </td>
                     <td className="py-3 px-4">
                       <div className="space-y-1">
+                        {c.overdue?.isOverdue && (
+                          <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                            🚨 Overdue
+                          </span>
+                        )}
                         {c.followUp?.count > 0 && (
-                          <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800">
+                          <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800 mt-1">
                             🔔 {c.followUp.count} Follow-up
                           </span>
                         )}
                         {c.escalation?.isEscalated && (
-                          <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">
+                          <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 mt-1">
                             🚨 Esc. Level {c.escalation.level}
                           </span>
                         )}
-                        {!c.followUp?.count && !c.escalation?.isEscalated && (
+                        {!c.overdue?.isOverdue && !c.followUp?.count && !c.escalation?.isEscalated && (
                           <span className="text-[11px] text-slate-400">Normal</span>
                         )}
                       </div>

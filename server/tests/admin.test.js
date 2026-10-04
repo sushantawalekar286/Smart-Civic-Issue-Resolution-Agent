@@ -432,5 +432,30 @@ describe('Admin Backend & Operations API', () => {
       expect(filteredRes.body.complaints[0].status).toBe('SUBMITTED');
       expect(filteredRes.body.complaints[0].severity).toBe('LOW');
     });
+
+    it('17. complaint filters work for isOverdue', async () => {
+      await createComplaint({ status: 'SUBMITTED', overdue: { isOverdue: true, overdueAt: new Date() } });
+      await createComplaint({ status: 'SUBMITTED', overdue: { isOverdue: false } });
+
+      const filteredRes = await request(app)
+        .get('/api/v1/admin/complaints?isOverdue=true')
+        .set('Cookie', [`jwt=${adminToken}`]);
+
+      expect(filteredRes.statusCode).toBe(200);
+      expect(filteredRes.body.complaints.length).toBeGreaterThanOrEqual(1);
+      expect(filteredRes.body.complaints[0].overdue.isOverdue).toBe(true);
+    });
+
+    it('18. dashboard statistics reflect overdue complaints', async () => {
+      await createComplaint({ status: 'SUBMITTED', overdue: { isOverdue: true, overdueAt: new Date() } });
+
+      const res = await request(app)
+        .get('/api/v1/admin/dashboard')
+        .set('Cookie', [`jwt=${adminToken}`]);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.complaints.overdue).toBeGreaterThanOrEqual(1);
+    });
   });
 });

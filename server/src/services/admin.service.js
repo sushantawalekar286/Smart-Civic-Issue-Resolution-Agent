@@ -45,6 +45,10 @@ exports.getComplaints = async (filters = {}, pagination = {}) => {
     }
   }
 
+  if (filters.isOverdue !== undefined) {
+    query['overdue.isOverdue'] = filters.isOverdue === 'true' || filters.isOverdue === true;
+  }
+
   if (filters.search) {
     query.$or = [
       { complaintId: { $regex: filters.search.trim(), $options: 'i' } },
@@ -497,6 +501,9 @@ exports.getDashboardStats = async () => {
     }
   ]);
 
+  // Overdue count
+  const overdueCount = await Complaint.countDocuments({ "overdue.isOverdue": true });
+
   // 4. Agent Actions metrics
   const totalAgentActions = await AgentAction.countDocuments();
   const followUpsInitiated = await AgentAction.countDocuments({ actionType: 'FOLLOW_UP_INITIATED' });
@@ -524,6 +531,7 @@ exports.getDashboardStats = async () => {
     complaints: {
       ...stats,
       unresolved: stats.submitted + stats.assigned + stats.inProgress + stats.escalated,
+      overdue: overdueCount,
       severity: severityStats,
       byDepartment: departmentVolume
     },

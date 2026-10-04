@@ -56,7 +56,8 @@ const ComplaintForm = ({ onAnalyzed }) => {
       const response = await complaintAPI.analyzeIntake(formData);
       onAnalyzed(response.data.data); // Return the normalized payload to the parent
     } catch (error) {
-      setSubmitError(error.response?.data?.message || 'Network failure. Please try again.');
+      const serverMessage = error.response?.data?.message || error.response?.data?.error;
+      setSubmitError(serverMessage || 'Network failure. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
